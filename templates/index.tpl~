@@ -10,7 +10,7 @@
   </head>
 
   <body>
-  
+  Ok, Text
       <div class="container">
         % include('templates/nav.tpl')
 

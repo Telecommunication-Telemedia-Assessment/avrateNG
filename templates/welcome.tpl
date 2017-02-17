@@ -8,24 +8,18 @@
     <title>{{title}}</title>
     % include('templates/header.tpl')
   </head>
+  
 
   <body>
-  
+  		
+  		<div class="jumbotron"> 
+  			<h1>Welcome to AVRate++</h1>  			
+  			<p class="lead">You will now be asked for your rating, alright?</p>
+  			<a class="btn btn-large btn-success" href="rate">Get started</a>
+  		</div>
+  		
       <div class="container">
-        % include('templates/nav.tpl')
-
-        <div class="row marketing">
-          <div class="col-lg-6">
-
-          </div>
-
-          <div class="col-lg-6">
-
-          </div>
-
-        </div>
-
-        % include('templates/footer.tpl')
+      % include('templates/footer.tpl')
       </div>
 
   </body>

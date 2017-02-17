@@ -81,18 +81,3 @@
   color: #fff;
   background-color: #5cb85c;
 }
-
-	.jumbotron {
-  margin: 20px 0;
-  text-align: center;
-  background-color:#BAE0FF;
-	}
-	.jumbotron h1 {
-  font-size: 72px;
-  line-height: 1;
-  font-weight: bold;
-	}
-	.jumbotron .btn {
-  font-size: 21px;
-  padding: 14px 24px;
-	}

@@ -9,21 +9,18 @@
     % include('templates/header.tpl')
   </head>
 
+
   <body>
-  
+  			
       <div class="container">
         % include('templates/nav.tpl')
-
-        <div class="row marketing">
-          <div class="col-lg-6">
-
-          </div>
-
-          <div class="col-lg-6">
-
-          </div>
-
+        
+        <div class="row">
+        	<h3>Please rate the basic image quality<br><br>
         </div>
+        
+        % include('templates/slider1.tpl')    
+          
 
         % include('templates/footer.tpl')
       </div>

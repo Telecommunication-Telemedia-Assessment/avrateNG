@@ -60,7 +60,7 @@ def main(params):
 
     # TODO(stg7) change to external config file
     config = {}
-    config["webport"] = 12345
+    config["webport"] = 12346
 
 
     lInfo("server starting.")
