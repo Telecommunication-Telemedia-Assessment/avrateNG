@@ -1,9 +1,19 @@
         <div class="header clearfix">
-          <nav>
-            <ul class="nav nav-pills pull-right">
-              <li role="presentation"><a href="/about">About</a></
-            </ul>
+          <nav class="navbar navbar-default">
+            <div class="container-fluid">
+              <div class="navbar-header">
+                <a href="/" class="navbar-brand"><h4 class="text-muted">AvRate++<small>....</small></h4></a>
+              </div>
+              <ul class="nav navbar-nav">
+                <li><a href="/rate"><h4>Rating</h4></a></li>
+                <li><a href="/info"><h4>Info</h4></a></li>
+              </ul>
+              <ul class="nav navbar-nav navbar-right">
+                <li><a href="/about"><h4>About</h4></a></li>
+              </ul>
+            </div>
           </nav>
-          <a href="/" class="heading"><h3 class="text-muted">AvRate++<small>....</small></h3></a>
-          <hr />
+          
+          <hr/>
+          
         </div>

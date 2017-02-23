@@ -21,6 +21,13 @@ from bottle import error
 from bottle import static_file
 
 
+def check_credentials(username, password):
+    validName = "max"
+    validPassword = "123"
+    if password == validPassword and username == validName:
+        return True
+    return False
+
 #@route('/play/:nr')
 @route('/play')
 def play():
@@ -28,6 +35,7 @@ def play():
     return template("templates/play.tpl", title="AvRate++")
 
 @route('/')
+@auth_basic(check_credentials)
 def welcome():
     return template("templates/welcome.tpl", title="AvRate++")
 
@@ -44,11 +52,24 @@ def about():
 def index():
     return template("templates/index.tpl", title="AvRate++")
 
+@route('/info')
+def index():
+    return template("templates/demographicInfo.tpl", title="AvRate++")
+
 @route('/save_rating', method='POST')
 def saveRating():
     data = request.POST.get('submit')
     #print("Submitted value is: "+data)
     redirect('/rate')
+
+@route('/save_demographics', method='POST')
+def saveDemographics():
+    firstName = request.forms.get("firstName")
+    lastName = request.forms.get("lastName")
+    age = request.forms.get("age")
+    comment = request.forms.get("comment")
+    #print("Comment: "+ comment)
+    redirect('/info')
 
 
 @route('/static/<filename>')
@@ -60,7 +81,7 @@ def main(params):
 
     # TODO(stg7) change to external config file
     config = {}
-    config["webport"] = 12345
+    config["webport"] = 12347
 
 
     lInfo("server starting.")
