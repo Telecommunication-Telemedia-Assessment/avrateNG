@@ -17,8 +17,12 @@
       <div class="row">
         <h3>Please rate the basic image quality<br><br></h3>
       </div>
-        
-      % include('templates/slider1.tpl')    
+
+      <div class="row">
+        % include('templates/radio1.tpl')   # replace with slider1.tpl or button1.tpl
+        <br><br>
+      </div>
+
       % include('templates/footer.tpl')
     </div>
 
