@@ -1,4 +1,4 @@
-<form id="form1" action="/save_rating" method="post"> 
+<form id="form1" action="/save_rating" method="post">
   <div class="row">
     <div class="funkyradio">
       <div class="funkyradio-success">
@@ -26,7 +26,7 @@
   <div class="row">
     <br>
     <button id="submitButton" class="btn-lg btn-success btn-block" disabled>Submit</button>
-  </div>	
+  </div>
 </form>
 
 <script>

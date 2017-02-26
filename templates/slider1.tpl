@@ -1,9 +1,9 @@
-<form action="/save_rating" method="post"> 
+<form action="/save_rating" method="post">
   <div class="row">
     <div class="col-lg-10">
       <div class="input-group input-group-lg">
 	<span class="input-group-addon" id="sizing-addon2">Poor</span>
-	<input type="range" class="form-control" id="slider" name="submit" min="0" max="100" step="1">    
+	<input type="range" class="form-control" id="slider" name="submit" min="0" max="100" step="1">
 	<span class="input-group-addon" id="sizing-addon2">Excellent</span>
       </div>
     </div>

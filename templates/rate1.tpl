@@ -10,16 +10,18 @@
   </head>
 
   <body>
-  			
+
     <div class="container">
       % include('templates/nav.tpl')
-        
+
       <div class="row">
-        <h3>Please rate the basic image quality<br><br></h3>
+        <h3>Please rate the watched video<br><br></h3>
       </div>
 
       <div class="row">
         % include('templates/radio1.tpl')   # replace with slider1.tpl or button1.tpl
+        % # include('templates/slider1.tpl')
+        % # include('templates/button1.tpl')
         <br><br>
       </div>
 

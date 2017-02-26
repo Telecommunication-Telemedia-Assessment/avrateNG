@@ -40,7 +40,7 @@ def play():
     video = config["playlist"][0]  # TODO: somehow get current video index
     lInfo("play {}".format(video))
     shell_call(config["player"].format(filename=video))
-    redirect('/rate')
+    #redirect('/rate')
 
 @route('/')
 @auth_basic(check_credentials)
@@ -49,6 +49,12 @@ def welcome():
 
 @route('/rate')
 def rate():
+    play()
+    # TODOs:
+    #   * would be nice to have somehow a progress bar on rating html page
+    #   * survey for name, age .. (demographics and more) should be at the end, and as required part
+    #   * at the end there should be a page with "thank you for rating and participating this test..."
+    #   * navbar maybe not required, `about` and `avrate++` parts could be integrated small in footer
     return template("templates/rate1.tpl", title="AvRate++")
 
 @route('/about')
