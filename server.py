@@ -3,6 +3,8 @@ import os
 import sys
 import argparse
 import json
+import threading
+import webbrowser
 
 # load libs from lib directory
 import loader
@@ -21,11 +23,12 @@ from bottle import redirect
 from bottle import response
 from bottle import error
 from bottle import static_file
-from bottle.ext import sqlite
+from bottle_sqlite import SQLitePlugin
+from bottle_config import ConfigPlugin
 
-config = None
 
 def check_credentials(username, password):
+    config = ConfigPlugin._config
     validName = config["http_user_name"]
     validPassword = config["http_user_password"]
     if password == validPassword and username == validName:
@@ -34,10 +37,11 @@ def check_credentials(username, password):
 
 # TODO: @auth_basic(check_credentials) should be at every route definition
 
+# TODO: play should not be a route? -> lets discuss about it :)
 #@route('/play/:nr')
 @route('/play')
-def play():
-    video = config["playlist"][0]  # TODO: somehow get current video index
+def play(config, video_index):
+    video = config["playlist"][video_index]
     lInfo("play {}".format(video))
     shell_call(config["player"].format(filename=video))
     #redirect('/rate')
@@ -47,9 +51,10 @@ def play():
 def welcome():
     return template("templates/welcome.tpl", title="AvRate++")
 
+# TODO: position of playlist should be handled as rate parameter, /rate/0 .... /rate/100
 @route('/rate')
-def rate():
-    play()
+def rate(config, video_index=0):
+    play(config, video_index)
     # TODOs:
     #   * would be nice to have somehow a progress bar on rating html page
     #   * survey for name, age .. (demographics and more) should be at the end, and as required part
@@ -101,23 +106,33 @@ def saveDemographics():
 
 @route('/static/<filename>')
 def server_static(filename):
-  return static_file(filename, root='./templates/static')
+    return static_file(filename, root='./templates/static')
 
 
-def main(params):
+def server(config):
+    install(SQLitePlugin(dbfile='ratings.db'))
+    install(ConfigPlugin(config))
+
+    lInfo("server starting.")
+    run(host='0.0.0.0', port=config["http_port"], debug=True, reloader=True)
+    lInfo("server stopped.")
+
+
+def main(params=[]):
     parser = argparse.ArgumentParser(description='avrate++', epilog="stg7 2017", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-configfilename', type=str, default="config.json", help='configuration file name')
     parser.add_argument('-playlist', type=str, default="playlist.list", help='video sequence play list')
+    parser.add_argument('--standalone', action='store_true', help="run as standalone version")
 
     argsdict = vars(parser.parse_args())
     lInfo("read config {}".format(argsdict["configfilename"]))
     # read config file
-    global config
     try:
         config = json.loads(read_file(os.path.dirname(os.path.realpath(__file__)) + "/" + argsdict["configfilename"]))
     except Exception as e:
         lError("configuration file 'config.json' is corrupt (not json conform). Error: " + str(e))
         return 1
+    lInfo("read playlist {}".format(argsdict["playlist"]))
 
     with open(argsdict["playlist"]) as playlistfile:
         playlist = [os.path.join(*x.strip().split("/")) for x in playlistfile.readlines() if x.strip() != ""]
@@ -132,13 +147,14 @@ def main(params):
         # linux
         config["player"] = config["player_linux"]
 
+    if argsdict["standalone"]:
+        server_thread = threading.Thread(target=server, args=[config])
+        server_thread.start()
+        webbrowser.open("http://0.0.0.0:{port}/".format(port=config["http_port"]), new=1, autoraise=True)
+        return
 
-    plugin = sqlite.Plugin(dbfile='ratings.db')
-    install(plugin)
+    server(config)
 
-    lInfo("server starting.")
-    run(host='0.0.0.0', port=config["http_port"], debug=True, reloader=True)
-    lInfo("server stopped.")
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv[1:]))
