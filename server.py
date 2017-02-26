@@ -109,12 +109,12 @@ def server_static(filename):
     return static_file(filename, root='./templates/static')
 
 
-def server(config):
+def server(config, host="127.0.0.1"):
     install(SQLitePlugin(dbfile='ratings.db'))
     install(ConfigPlugin(config))
 
     lInfo("server starting.")
-    run(host='0.0.0.0', port=config["http_port"], debug=True, reloader=True)
+    run(host=host, port=config["http_port"], debug=True, reloader=True)
     lInfo("server stopped.")
 
 
@@ -132,11 +132,12 @@ def main(params=[]):
     except Exception as e:
         lError("configuration file 'config.json' is corrupt (not json conform). Error: " + str(e))
         return 1
-    lInfo("read playlist {}".format(argsdict["playlist"]))
 
+    lInfo("read playlist {}".format(argsdict["playlist"]))
     with open(argsdict["playlist"]) as playlistfile:
         playlist = [os.path.join(*x.strip().split("/")) for x in playlistfile.readlines() if x.strip() != ""]
-        config["playlist"] = playlist
+        config["playlist"] = playlist  # add cleaned playlist to config
+        # check if each video exists
         for video in playlist:
             if not os.path.isfile(video):
                 lError("'{}' is not a valid videofile, please check your playlistfile".format(video))
@@ -144,16 +145,20 @@ def main(params=[]):
 
     from sys import platform
     if platform == "linux" or platform == "linux2":
-        # linux
-        config["player"] = config["player_linux"]
+        config["player"] = config["player_linux"]  # override player command for linux
 
     if argsdict["standalone"]:
+        # run server in separate thread
         server_thread = threading.Thread(target=server, args=[config])
         server_thread.start()
-        webbrowser.open("http://0.0.0.0:{port}/".format(port=config["http_port"]), new=1, autoraise=True)
+        # open (default) web browser
+        # TODO: think about a separate browser instanciation, e.g. chrome without close button and tabs?
+        # TODO: maybe deactivate password authentification if avrate++ runs in standalone mode?
+        webbrowser.open("http://127.0.0.1:{port}/".format(port=config["http_port"]), new=1, autoraise=True)
         return
 
-    server(config)
+    # default case: run in server mode
+    server(config, host='0.0.0.0')
 
 
 if __name__ == "__main__":
