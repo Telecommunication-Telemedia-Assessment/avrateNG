@@ -9,30 +9,38 @@ import loader
 from log import *
 from system import *
 
+import bottle
 from bottle import Bottle
 from bottle import auth_basic
 from bottle import route
 from bottle import run
+from bottle import install
 from bottle import template
 from bottle import request
 from bottle import redirect
 from bottle import response
 from bottle import error
 from bottle import static_file
+from bottle.ext import sqlite
 
+config = None
 
 def check_credentials(username, password):
-    validName = "max"
-    validPassword = "123"
+    validName = config["http_user_name"]
+    validPassword = config["http_user_password"]
     if password == validPassword and username == validName:
         return True
     return False
 
+# TODO: @auth_basic(check_credentials) should be at every route definition
+
 #@route('/play/:nr')
 @route('/play')
 def play():
-    os.system("sleep 20")
-    return template("templates/play.tpl", title="AvRate++")
+    video = config["playlist"][0]  # TODO: somehow get current video index
+    lInfo("play {}".format(video))
+    shell_call(config["player"].format(filename=video))
+    redirect('/rate')
 
 @route('/')
 @auth_basic(check_credentials)
@@ -41,7 +49,7 @@ def welcome():
 
 @route('/rate')
 def rate():
-    return template("templates/rate1.tpl", title="AvRate++")    
+    return template("templates/rate1.tpl", title="AvRate++")
 
 @route('/about')
 def about():
@@ -53,17 +61,30 @@ def index():
     return template("templates/index.tpl", title="AvRate++")
 
 @route('/info')
-def index():
+def info():
     return template("templates/demographicInfo.tpl", title="AvRate++")
 
+
+@route('/statistics')
+def statistics(db):
+    # TODO: implement a short diagram of stored ratings, e.g. using http://www.chartjs.org/
+    #  or https://developers.google.com/chart/
+    return "not yet implemented"
+
 @route('/save_rating', method='POST')
-def saveRating():
+def saveRating(db):
     data = request.POST.get('submit')
+    # HINT: save everything that is in this submitted formuluar
+    # TODO: add timestamp + userid/name of rating to db
+    db.execute('CREATE TABLE IF NOT EXISTS ratings (video string, rating_filled string);')
+    db.execute('INSERT INTO ratings VALUES (?,?);',("1", "dump everything that is in ratings formular to json and store it here"))
+    db.commit()
     #print("Submitted value is: "+data)
     redirect('/rate')
 
 @route('/save_demographics', method='POST')
 def saveDemographics():
+    # HINT: save everything that is in this submitted formuluar
     firstName = request.forms.get("firstName")
     lastName = request.forms.get("lastName")
     age = request.forms.get("age")
@@ -78,14 +99,39 @@ def server_static(filename):
 
 
 def main(params):
+    parser = argparse.ArgumentParser(description='avrate++', epilog="stg7 2017", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument('-configfilename', type=str, default="config.json", help='configuration file name')
+    parser.add_argument('-playlist', type=str, default="playlist.list", help='video sequence play list')
 
-    # TODO(stg7) change to external config file
-    config = {}
-    config["webport"] = 12347
+    argsdict = vars(parser.parse_args())
+    lInfo("read config {}".format(argsdict["configfilename"]))
+    # read config file
+    global config
+    try:
+        config = json.loads(read_file(os.path.dirname(os.path.realpath(__file__)) + "/" + argsdict["configfilename"]))
+    except Exception as e:
+        lError("configuration file 'config.json' is corrupt (not json conform). Error: " + str(e))
+        return 1
 
+    with open(argsdict["playlist"]) as playlistfile:
+        playlist = [os.path.join(*x.strip().split("/")) for x in playlistfile.readlines() if x.strip() != ""]
+        config["playlist"] = playlist
+        for video in playlist:
+            if not os.path.isfile(video):
+                lError("'{}' is not a valid videofile, please check your playlistfile".format(video))
+                return -1
+
+    from sys import platform
+    if platform == "linux" or platform == "linux2":
+        # linux
+        config["player"] = config["player_linux"]
+
+
+    plugin = sqlite.Plugin(dbfile='ratings.db')
+    install(plugin)
 
     lInfo("server starting.")
-    run(host='0.0.0.0', port=config["webport"], debug=True, reloader=True)
+    run(host='0.0.0.0', port=config["http_port"], debug=True, reloader=True)
     lInfo("server stopped.")
 
 if __name__ == "__main__":

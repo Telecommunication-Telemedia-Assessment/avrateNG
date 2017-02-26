@@ -6,7 +6,7 @@
 
     author: Steve Göring
     contact: stg7@gmx.de
-    2015
+    2017
 """
 import os
 import sys
@@ -16,13 +16,13 @@ import subprocess
 def shell_call(call):
     """
     Run a program via system call and return stdout + stderr.
-    @param call programm and command line parameter list, e.g ["ls", "/"]
+    @param call programm with command line parameters, e.g. "ls -1 /"
     @return stdout and stderr of programm call
     """
     try:
-        output = subprocess.check_output(call, stderr=subprocess.STDOUT, universal_newlines=True)
+        output = subprocess.check_output(call, stderr=subprocess.STDOUT, universal_newlines=True, shell=True)
     except Exception as e:
-        output = str(e.output)
+        output = str(e)
     return output
 
 

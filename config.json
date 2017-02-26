@@ -1,0 +1,7 @@
+{
+    "player": "thirdparty\\mpv-x86_64-20161225\\mpv.exe --fs \"{filename}\"",
+    "player_linux": "mpv --fs '{filename}'",
+    "http_user_name": "max",
+    "http_user_password": "123",
+    "http_port" : "12347"
+}
