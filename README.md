@@ -8,6 +8,7 @@ Requirements:
 * platform independent (not only windows)
 * possible to use external "rating" device (via webpage rating)
 * python3
+* mpv
 
 Ideas
 -----
