@@ -26,6 +26,7 @@ from bottle import static_file
 from bottle_sqlite import SQLitePlugin
 from bottle_config import ConfigPlugin
 
+# todo: verhinden dass der nutzer "aktualisieren" im browser drücken kann, weil sonst das video abspielen wiederholt werden kann
 
 def check_credentials(username, password):
     config = ConfigPlugin._config
@@ -39,7 +40,7 @@ def check_credentials(username, password):
 
 # TODO: play should not be a route? -> lets discuss about it :)
 #@route('/play/:nr')
-@route('/play')
+#@route('/play')
 def play(config, video_index):
     video = config["playlist"][video_index]
     lInfo("play {}".format(video))
@@ -51,16 +52,17 @@ def play(config, video_index):
 def welcome():
     return template("templates/welcome.tpl", title="AvRate++")
 
-# TODO: position of playlist should be handled as rate parameter, /rate/0 .... /rate/100
+@route('/rate/:video_index')
 @route('/rate')
 def rate(config, video_index=0):
+    video_index = int(video_index)
     play(config, video_index)
     # TODOs:
     #   * would be nice to have somehow a progress bar on rating html page
     #   * survey for name, age .. (demographics and more) should be at the end, and as required part
     #   * at the end there should be a page with "thank you for rating and participating this test..."
     #   * navbar maybe not required, `about` and `avrate++` parts could be integrated small in footer
-    return template("templates/rate1.tpl", title="AvRate++")
+    return template("templates/rate1.tpl", title="AvRate++", video_index=video_index + 1)
 
 @route('/about')
 def about():
@@ -80,22 +82,28 @@ def info():
 def statistics(db):
     # TODO: implement a short diagram of stored ratings, e.g. using http://www.chartjs.org/
     #  or https://developers.google.com/chart/
+
+    # e.g. average rating per video file with confidence intervalls, or something else :)
     return "not yet implemented"
 
+
+@route('/save_rating/:video_index', method='POST')
 @route('/save_rating', method='POST')
-def saveRating(db):
+def saveRating(db, video_index=0):
     data = request.POST.get('submit')
     # HINT: save everything that is in this submitted formuluar
     # TODO: add timestamp + userid/name of rating to db
+    # store : request.POST as json string in database
     db.execute('CREATE TABLE IF NOT EXISTS ratings (video string, rating_filled string);')
     db.execute('INSERT INTO ratings VALUES (?,?);',("1", "dump everything that is in ratings formular to json and store it here"))
     db.commit()
     #print("Submitted value is: "+data)
-    redirect('/rate')
+    redirect('/rate/' + str(video_index))
 
 @route('/save_demographics', method='POST')
 def saveDemographics():
     # HINT: save everything that is in this submitted formuluar
+    # TODO: ask for these information at the end or beginning of this subjective test
     firstName = request.forms.get("firstName")
     lastName = request.forms.get("lastName")
     age = request.forms.get("age")

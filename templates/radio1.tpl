@@ -1,4 +1,4 @@
-<form id="form1" action="/save_rating" method="post">
+<form id="form1" action="/save_rating?video_index={{video_index}}" method="post">
   <div class="row">
     <div class="funkyradio">
       <div class="funkyradio-success">

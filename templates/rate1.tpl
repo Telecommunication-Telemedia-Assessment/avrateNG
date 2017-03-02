@@ -19,9 +19,9 @@
       </div>
 
       <div class="row">
-        % include('templates/radio1.tpl')   # replace with slider1.tpl or button1.tpl
-        % # include('templates/slider1.tpl')
-        % # include('templates/button1.tpl')
+        % include('templates/radio1.tpl', video_index=video_index)   # replace with slider1.tpl or button1.tpl
+        % include('templates/slider1.tpl')
+        % include('templates/button1.tpl', video_index=video_index)
         <br><br>
       </div>
 
