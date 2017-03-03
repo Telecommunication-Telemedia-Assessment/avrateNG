@@ -9,7 +9,7 @@
                 <li><a href="/info"><h4>Info</h4></a></li>
               </ul>
               <ul class="nav navbar-nav navbar-right">
-                <li><a href="/about"><h4>About</h4></a></li>
+                <li><a href="/about"><h4>About </h4></a></li>
               </ul>
             </div>
           </nav>

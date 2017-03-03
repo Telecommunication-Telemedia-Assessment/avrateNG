@@ -21,7 +21,9 @@
   <body>
   			
     <div class="container">
-      % include('templates/nav.tpl')
+      <div class="row">
+        <h3>Almost done! Please fill in the following fields:<br><br></h3>
+      </div>
         
       <form id="demographics" action="/save_demographics" method="post">
         <div class="input-group input-group-lg">
@@ -43,7 +45,7 @@
           <textarea class="form-control" rows="5" id="comment" name="comment" placeholder="Comments"></textarea>
         </div>
         <div class="col-lg-2">
-          <button id="submitButton" class="btn-lg btn-success">Save</button>
+          <button id="submitButton" class="btn-lg btn-success">OK</button>
         </div>    
         </div>
       </form>

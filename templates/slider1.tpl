@@ -2,13 +2,13 @@
   <div class="row">
     <div class="col-lg-10">
       <div class="input-group input-group-lg">
-	<span class="input-group-addon" id="sizing-addon2">Poor</span>
+	<span class="input-group-addon" id="sizing-addon2">0%</span>
 	<input type="range" class="form-control" id="slider" name="submit" min="0" max="100" step="1">
-	<span class="input-group-addon" id="sizing-addon2">Excellent</span>
+	<span class="input-group-addon" id="sizing-addon2">100%</span>
       </div>
     </div>
     <div class="col-lg-2">
-      <button id="submitButton" class="btn-lg btn-success" disabled>Submit</button>
+      <button id="submitButton" class="btn-lg btn-success" disabled>Submitand continue</button>
     </div>
   </div>
 </form>

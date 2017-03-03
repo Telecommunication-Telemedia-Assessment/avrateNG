@@ -25,7 +25,7 @@
   </div>
   <div class="row">
     <br>
-    <button id="submitButton" class="btn-lg btn-success btn-block" disabled>Submit</button>
+    <button id="submitButton" class="btn-lg btn-success btn-block" disabled>Submit and continue</button>
   </div>
 </form>
 

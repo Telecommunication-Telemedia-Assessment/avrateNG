@@ -36,11 +36,9 @@ def check_credentials(username, password):
         return True
     return False
 
-# TODO: @auth_basic(check_credentials) should be at every route definition
 
-# TODO: play should not be a route? -> lets discuss about it :)
-#@route('/play/:nr')
-#@route('/play')
+
+
 def play(config, video_index):
     video = config["playlist"][video_index]
     lInfo("play {}".format(video))
@@ -52,33 +50,45 @@ def play(config, video_index):
 def welcome():
     return template("templates/welcome.tpl", title="AvRate++")
 
-@route('/rate/:video_index')
-@route('/rate')
-def rate(config, video_index=0):
+user_id = 0 # initialize user (starts over for each new browser session)
+
+@route('/rate/<video_index>')
+@auth_basic(check_credentials)
+def rate(config, video_index):
     video_index = int(video_index)
     play(config, video_index)
-    # TODOs:
-    #   * would be nice to have somehow a progress bar on rating html page
-    #   * survey for name, age .. (demographics and more) should be at the end, and as required part
-    #   * at the end there should be a page with "thank you for rating and participating this test..."
-    #   * navbar maybe not required, `about` and `avrate++` parts could be integrated small in footer
-    return template("templates/rate1.tpl", title="AvRate++", video_index=video_index + 1)
+    if video_index == 0:
+        global user_id 
+        user_id = user_id + 1
+    # Todo: So far, user_id is a global variable which increments on every routing to rate/0 (meaning on every first video item). Also it resets to 1 every time the script starts over -> Better way?
+    return template("templates/rate1.tpl", title="AvRate++", video_index=video_index, video_count=len(config["playlist"]))
+
 
 @route('/about')
+@auth_basic(check_credentials)
 def about():
     return template("templates/about.tpl", title="AvRate++")
 
 
 @route('/index')
+@auth_basic(check_credentials)
 def index():
     return template("templates/index.tpl", title="AvRate++")
 
 @route('/info')
+@auth_basic(check_credentials)
 def info():
     return template("templates/demographicInfo.tpl", title="AvRate++")
 
+@route('/finish')
+@auth_basic(check_credentials)
+def info():
+    return template("templates/finish.tpl", title="AvRate++")
+
+
 
 @route('/statistics')
+@auth_basic(check_credentials)
 def statistics(db):
     # TODO: implement a short diagram of stored ratings, e.g. using http://www.chartjs.org/
     #  or https://developers.google.com/chart/
@@ -87,34 +97,40 @@ def statistics(db):
     return "not yet implemented"
 
 
-@route('/save_rating/:video_index', method='POST')
 @route('/save_rating', method='POST')
-def saveRating(db, video_index=0):
-    data = request.POST.get('submit')
+@auth_basic(check_credentials)
+def saveRating(db,config):
+    #data = request.POST.get('submit')
     # HINT: save everything that is in this submitted formuluar
     # TODO: add timestamp + userid/name of rating to db
     # store : request.POST as json string in database
     db.execute('CREATE TABLE IF NOT EXISTS ratings (video string, rating_filled string);')
     db.execute('INSERT INTO ratings VALUES (?,?);',("1", "dump everything that is in ratings formular to json and store it here"))
     db.commit()
-    #print("Submitted value is: "+data)
-    redirect('/rate/' + str(video_index))
+    video_index = request.query.video_index
+    video_index=int(video_index) + 1
+    if video_index > len(config["playlist"])-1:
+        redirect('/info')
+    else:
+        redirect('/rate/' + str(video_index))
+    
 
 @route('/save_demographics', method='POST')
+@auth_basic(check_credentials)
 def saveDemographics():
     # HINT: save everything that is in this submitted formuluar
-    # TODO: ask for these information at the end or beginning of this subjective test
     firstName = request.forms.get("firstName")
     lastName = request.forms.get("lastName")
     age = request.forms.get("age")
     comment = request.forms.get("comment")
     #print("Comment: "+ comment)
-    redirect('/info')
+    redirect('/finish')
 
 
 @route('/static/<filename>')
+@auth_basic(check_credentials)
 def server_static(filename):
-    return static_file(filename, root='./templates/static')
+    return static_file(filename, root='/templates/static')
 
 
 def server(config, host="127.0.0.1"):

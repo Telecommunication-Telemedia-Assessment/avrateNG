@@ -12,7 +12,8 @@
   <body>
 
     <div class="container">
-      % include('templates/nav.tpl')
+      <br>
+      % include('templates/progressBar.tpl', video_index=video_index, video_count=video_count)
 
       <div class="row">
         <h3>Please rate the watched video<br><br></h3>
@@ -20,8 +21,7 @@
 
       <div class="row">
         % include('templates/radio1.tpl', video_index=video_index)   # replace with slider1.tpl or button1.tpl
-        % include('templates/slider1.tpl')
-        % include('templates/button1.tpl', video_index=video_index)
+        
         <br><br>
       </div>
 

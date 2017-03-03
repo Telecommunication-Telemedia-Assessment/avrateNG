@@ -12,12 +12,13 @@
   <body>
 
     <div class="jumbotron">
-      <h1>Welcome to AVRate++</h1>
-      <p class="lead">You will now be asked for your rating, alright?</p>
-      <a class="btn btn-large btn-success" href="/rate/0">Get started</a> <!-- Jump to first playlist item -->
+      <h1>You're done</h1>
+      <p class="lead">Thank you for participating!</p>
+      <a class="btn btn-large btn-success" href="/">Restart</a>
     </div>
     <div class="container">
       % include('templates/footer.tpl')
+      <a href="/about">About AVRate++</a>
     </div>
 
   </body>
