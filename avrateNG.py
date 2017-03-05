@@ -5,6 +5,8 @@ import argparse
 import json
 import threading
 import webbrowser
+import time
+import datetime
 
 # load libs from lib directory
 import loader
@@ -27,6 +29,7 @@ from bottle_sqlite import SQLitePlugin
 from bottle_config import ConfigPlugin
 
 # todo: verhinden dass der nutzer "aktualisieren" im browser drücken kann, weil sonst das video abspielen wiederholt werden kann
+# TODO: Some kind of wait screen while video is played (mobile)
 
 def check_credentials(username, password):
     config = ConfigPlugin._config
@@ -36,51 +39,53 @@ def check_credentials(username, password):
         return True
     return False
 
-
+# needed for routing the static files (CSS)
+path = os.path.abspath(__file__)
+dir_path = os.path.dirname(path)
 
 
 def play(config, video_index):
     video = config["playlist"][video_index]
     lInfo("play {}".format(video))
     shell_call(config["player"].format(filename=video))
-    #redirect('/rate')
 
-@route('/')
+
+@route('/')  # Welcome screen
 @auth_basic(check_credentials)
 def welcome():
     return template("templates/welcome.tpl", title="AvRate++")
 
-user_id = 0 # initialize user (starts over for each new browser session)
 
-@route('/rate/<video_index>')
+@route('/rate/<video_index>')  # Rating screen with video_index as variable
 @auth_basic(check_credentials)
-def rate(config, video_index):
+def rate(db, config, video_index):
     video_index = int(video_index)
     play(config, video_index)
-    if video_index == 0:
-        global user_id 
-        user_id = user_id + 1
-    # Todo: So far, user_id is a global variable which increments on every routing to rate/0 (meaning on every first video item). Also it resets to 1 every time the script starts over -> Better way?
+
+    # for every new start (video_id=0): user_id (handled as global variable) is incremented by 1
+    if video_index == 0: 
+        global user_id      
+        if not db.execute("SELECT * FROM sqlite_master WHERE type='table' AND name='ratings'").fetchone():
+            user_id = 1 # if ratings table does not exist: first user_id = 1
+        else:
+            user_id = int(db.execute('SELECT max(user_ID) from ratings').fetchone()[0]) + 1  # new user_ID is always old (highest) user_ID+1
+
     return template("templates/rate1.tpl", title="AvRate++", video_index=video_index, video_count=len(config["playlist"]))
 
 
-@route('/about')
+@route('/about') # About section
 @auth_basic(check_credentials)
 def about():
     return template("templates/about.tpl", title="AvRate++")
 
 
-@route('/index')
-@auth_basic(check_credentials)
-def index():
-    return template("templates/index.tpl", title="AvRate++")
-
-@route('/info')
+@route('/info') # User Info screen
 @auth_basic(check_credentials)
 def info():
     return template("templates/demographicInfo.tpl", title="AvRate++")
 
-@route('/finish')
+
+@route('/finish') # Finish screen
 @auth_basic(check_credentials)
 def info():
     return template("templates/finish.tpl", title="AvRate++")
@@ -99,38 +104,35 @@ def statistics(db):
 
 @route('/save_rating', method='POST')
 @auth_basic(check_credentials)
-def saveRating(db,config):
-    #data = request.POST.get('submit')
-    # HINT: save everything that is in this submitted formuluar
-    # TODO: add timestamp + userid/name of rating to db
-    # store : request.POST as json string in database
-    db.execute('CREATE TABLE IF NOT EXISTS ratings (video string, rating_filled string);')
-    db.execute('INSERT INTO ratings VALUES (?,?);',("1", "dump everything that is in ratings formular to json and store it here"))
+def saveRating(db,config):  # save rating for watched video
+    # store : request.POST as json string in database 
+    timestamp = str(datetime.datetime.fromtimestamp(int(time.time())).strftime('%Y-%m-%d %H:%M:%S'))  # define structure of timestamp
+    video_index = request.query.video_index  # extract current video_index from query
+    db.execute('CREATE TABLE IF NOT EXISTS ratings (user_ID, video string, rating_filled string, timestamp);')
+    db.execute('INSERT INTO ratings VALUES (?,?,?,?);',(user_id, video_index, request.body.read(), timestamp))
     db.commit()
-    video_index = request.query.video_index
-    video_index=int(video_index) + 1
-    if video_index > len(config["playlist"])-1:
+    
+    # check if last video in playlist
+    video_index=int(video_index) + 1 
+    if video_index > len(config["playlist"])-1:  # playlist over
         redirect('/info')
     else:
-        redirect('/rate/' + str(video_index))
+        redirect('/rate/' + str(video_index))  # next video
     
 
 @route('/save_demographics', method='POST')
 @auth_basic(check_credentials)
-def saveDemographics():
-    # HINT: save everything that is in this submitted formuluar
-    firstName = request.forms.get("firstName")
-    lastName = request.forms.get("lastName")
-    age = request.forms.get("age")
-    comment = request.forms.get("comment")
-    #print("Comment: "+ comment)
+def saveDemographics(db, config):  # save user information (user_id is key in tables)
+    db.execute('CREATE TABLE IF NOT EXISTS info (user_ID, user data);')
+    db.execute('INSERT INTO info VALUES (?,?);',(user_id, request.body.read()))
+    db.commit()
     redirect('/finish')
 
 
-@route('/static/<filename>')
+@route('/static/<filename:path>',name='static')  # access the stylesheets
 @auth_basic(check_credentials)
 def server_static(filename):
-    return static_file(filename, root='/templates/static')
+    return static_file(filename, root=dir_path+'/templates/static')
 
 
 def server(config, host="127.0.0.1"):

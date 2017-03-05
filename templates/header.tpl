@@ -10,6 +10,6 @@
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
-<link rel="stylesheet" href="../static/avrate.css"> <!-- ../static/avrate.css because otherwise rate/static/avrate.css is looked up -->
-<link rel="stylesheet" href="../static/bootstrap-range-input.min.css">
+<link rel="stylesheet" href="/static/avrate.css"> 
+<link rel="stylesheet" href="/static/bootstrap-range-input.min.css">
 

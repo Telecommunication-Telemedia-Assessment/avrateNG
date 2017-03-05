@@ -18,6 +18,10 @@
     }
   </style>
 
+<!-- this template contains the text input fields for the demographic user info. 
+When creating custom forms stick to this structure and add or remove the custom fields.
+Don't change the form attributes "action" and "method"-->
+
   <body>
   			
     <div class="container">
