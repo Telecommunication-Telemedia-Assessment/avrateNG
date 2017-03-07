@@ -52,25 +52,37 @@ def play(config, video_index):
 
 @route('/')  # Welcome screen
 @auth_basic(check_credentials)
-def welcome():
-    return template("templates/welcome.tpl", title="AvRate++")
+def welcome(db, config):
+    # for every new start ("/"): user_id (handled as global variable) is incremented by 1 
+    global user_id      
+    if not db.execute("SELECT * FROM sqlite_master WHERE type='table' AND name='ratings'").fetchone():
+        user_id = 1 # if ratings table does not exist: first user_id = 1
+    else:
+        user_id = int(db.execute('SELECT max(user_ID) from ratings').fetchone()[0]) + 1  # new user_ID is always old (highest) user_ID+1
+    
+    # initialize session_state variable (throws error when refreshing the page or going back)
+    global session_state
+    session_state = 0
+
+    return template("templates/welcome.tpl", title="AvRate++",user_id=user_id)
 
 
 @route('/rate/<video_index>')  # Rating screen with video_index as variable
 @auth_basic(check_credentials)
 def rate(db, config, video_index):
     video_index = int(video_index)
-    play(config, video_index)
 
-    # for every new start (video_id=0): user_id (handled as global variable) is incremented by 1
-    if video_index == 0: 
-        global user_id      
-        if not db.execute("SELECT * FROM sqlite_master WHERE type='table' AND name='ratings'").fetchone():
-            user_id = 1 # if ratings table does not exist: first user_id = 1
-        else:
-            user_id = int(db.execute('SELECT max(user_ID) from ratings').fetchone()[0]) + 1  # new user_ID is always old (highest) user_ID+1
+    # throw error page when refreshing or going back one page and dont play video again
+    if not session_state == video_index:
+        return "<h1>You refreshed the page or went back. Sorry, but that means you have to <a href='/'>start over (Click here)</a>.</h1>"
 
-    return template("templates/rate1.tpl", title="AvRate++", video_index=video_index, video_count=len(config["playlist"]))
+    play(config, video_index) 
+
+    # increment session_state when everything is fine
+    global session_state
+    session_state = session_state + 1
+
+    return template("templates/rate1.tpl", title="AvRate++", video_index=video_index, video_count=len(config["playlist"]), user_id=user_id)
 
 
 @route('/about') # About section

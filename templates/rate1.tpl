@@ -20,13 +20,16 @@ video_index needs to be given as input -->
       % include('templates/progressBar.tpl', video_index=video_index, video_count=video_count)
 
       <div class="row">
-        <h3>Please rate the watched video<br><br></h3>
+        <h3 style="float: left; width: 34%; text-align: left;">Please rate the watched video</h3>
+        <h3 style="float: right; width: 34%; text-align: right;">User ID: {{user_id}}</h3>
+        <br><br><br><br><br><br>
       </div>
 
       <div class="row" id="form-template">
         % include('templates/slider1.tpl', video_index=video_index)   # replace with slider1.tpl or button1.tpl
         
         <br><br>
+        
       </div>
 
       % include('templates/footer.tpl')

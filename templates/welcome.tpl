@@ -15,6 +15,8 @@
       <h1>Welcome to AVRate++</h1>
       <p class="lead">You will now be asked for your rating, alright?</p>
       <a class="btn btn-large btn-success" href="/rate/0">Get started</a> <!-- Jump to first playlist item -->
+      <br><br>
+      <p class="lead">User ID: {{user_id}}</p>
     </div>
     <div class="container">
       % include('templates/footer.tpl')
