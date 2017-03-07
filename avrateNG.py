@@ -72,9 +72,9 @@ def welcome(db, config):
 def rate(db, config, video_index):
     video_index = int(video_index)
 
-    # throw error page when refreshing or going back one page and dont play video again
+    # stay on page when refreshing and dont play video again
     if not session_state == video_index:
-        return "<h1>You refreshed the page or went back. Sorry, but that means you have to <a href='/'>start over (Click here)</a>.</h1>"
+        return template("templates/rate1.tpl", title="AvRate++", video_index=video_index, video_count=len(config["playlist"]), user_id=user_id)
 
     play(config, video_index)
 
