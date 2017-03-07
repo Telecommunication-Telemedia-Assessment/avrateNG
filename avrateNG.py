@@ -34,9 +34,7 @@ def check_credentials(username, password):
     config = ConfigPlugin._config
     validName = config["http_user_name"]
     validPassword = config["http_user_password"]
-    if password == validPassword and username == validName:
-        return True
-    return False
+    return password == validPassword and username == validName
 
 
 def play(config, video_index):
