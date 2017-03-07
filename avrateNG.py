@@ -61,7 +61,7 @@ def welcome(db, config):
     global session_state
     session_state = 0
 
-    return template("templates/welcome.tpl", title="AvRate++",user_id=user_id)
+    return template("templates/welcome.tpl", title="AvRate++", user_id=user_id)
 
 
 @route('/rate/<video_index>')  # Rating screen with video_index as variable
@@ -122,8 +122,8 @@ def saveRating(db,config):  # save rating for watched video
     db.commit()
 
     # check if last video in playlist
-    video_index=int(video_index) + 1
-    if video_index > len(config["playlist"])-1:  # playlist over
+    video_index = int(video_index) + 1
+    if video_index > len(config["playlist"]) - 1:  # playlist over
         redirect('/info')
     else:
         redirect('/rate/' + str(video_index))  # next video
