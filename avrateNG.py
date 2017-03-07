@@ -28,7 +28,6 @@ from bottle import static_file
 from bottle_sqlite import SQLitePlugin
 from bottle_config import ConfigPlugin
 
-# todo: verhinden dass der nutzer "aktualisieren" im browser drücken kann, weil sonst das video abspielen wiederholt werden kann
 # TODO: Some kind of wait screen while video is played (mobile)
 
 def check_credentials(username, password):
@@ -38,10 +37,6 @@ def check_credentials(username, password):
     if password == validPassword and username == validName:
         return True
     return False
-
-# needed for routing the static files (CSS)
-path = os.path.abspath(__file__)
-dir_path = os.path.dirname(path)
 
 
 def play(config, video_index):
@@ -55,6 +50,8 @@ def play(config, video_index):
 def welcome(db, config):
     # for every new start ("/"): user_id (handled as global variable) is incremented by 1
     global user_id
+    # TODO: steve: can we find a better way for doing it, without global variables?
+
     if not db.execute("SELECT * FROM sqlite_master WHERE type='table' AND name='ratings'").fetchone():
         user_id = 1 # if ratings table does not exist: first user_id = 1
     else:
@@ -72,7 +69,7 @@ def welcome(db, config):
 def rate(db, config, video_index):
     video_index = int(video_index)
 
-    # stay on page when refreshing and dont play video again
+    # stay on page when refreshing and don't play video again
     if not session_state == video_index:
         return template("templates/rate1.tpl", title="AvRate++", video_index=video_index, video_count=len(config["playlist"]), user_id=user_id)
 
@@ -144,7 +141,9 @@ def saveDemographics(db, config):  # save user information (user_id is key in ta
 @route('/static/<filename:path>',name='static')  # access the stylesheets
 @auth_basic(check_credentials)
 def server_static(filename):
-    return static_file(filename, root=dir_path+'/templates/static')
+    # needed for routing the static files (CSS)
+    this_dir_path = os.path.dirname(os.path.abspath(__file__))
+    return static_file(filename, root=this_dir_path + '/templates/static')
 
 
 def server(config, host="127.0.0.1"):
@@ -190,8 +189,6 @@ def main(params=[]):
         server_thread = threading.Thread(target=server, args=[config])
         server_thread.start()
         # open (default) web browser
-        # TODO: think about a separate browser instanciation, e.g. chrome without close button and tabs?
-        # TODO: maybe deactivate password authentification if avrate++ runs in standalone mode?
         webbrowser.open("http://127.0.0.1:{port}/".format(port=config["http_port"]), new=1, autoraise=True)
         return
 
