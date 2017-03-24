@@ -13,3 +13,4 @@
 <link rel="stylesheet" href="/static/avrate.css"> 
 <link rel="stylesheet" href="/static/bootstrap-range-input.min.css">
 
+<script src="/static/noback.js"></script>

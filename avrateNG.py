@@ -46,18 +46,16 @@ def play(config, video_index):
 @route('/')  # Welcome screen
 @auth_basic(check_credentials)
 def welcome(db, config):
-    # for every new start ("/"): user_id (handled as global variable) is incremented by 1
-    global user_id
-    # TODO: steve: can we find a better way for doing it, without global variables?
+    # for every new start ("/"): user_id (cookie) is incremented by 1
 
     if not db.execute("SELECT * FROM sqlite_master WHERE type='table' AND name='ratings'").fetchone():
         user_id = 1 # if ratings table does not exist: first user_id = 1
     else:
         user_id = int(db.execute('SELECT max(user_ID) from ratings').fetchone()[0]) + 1  # new user_ID is always old (highest) user_ID+1
+    response.set_cookie("user_id",str(user_id),path="/")
 
     # initialize session_state variable (throws error when refreshing the page or going back)
-    global session_state
-    session_state = 0
+    response.set_cookie("session_state","0",path="/")
 
     return template("templates/welcome.tpl", title="AvRate++", user_id=user_id)
 
@@ -66,16 +64,22 @@ def welcome(db, config):
 @auth_basic(check_credentials)
 def rate(db, config, video_index):
     video_index = int(video_index)
+    user_id = int(request.get_cookie("user_id"))
+    session_state = int(request.get_cookie("session_state"))
 
-    # stay on page when refreshing and don't play video again
-    if not session_state == video_index:
-        return template("templates/rate1.tpl", title="AvRate++", video_index=video_index, video_count=len(config["playlist"]), user_id=user_id)
-
-    play(config, video_index)
-
-    # increment session_state when everything is fine
-    global session_state
-    session_state = session_state + 1
+    if video_index == session_state: 
+        play_video = 1
+    else:
+        play_video = 0
+    
+    # play video only on first visit    
+    if play_video == 1:
+        play(config, video_index)
+        # play just one time
+        play_video = 0
+        session_state = session_state + 1
+        response.set_cookie("session_state",str(session_state),path="/")
+              
 
     return template("templates/rate1.tpl", title="AvRate++", video_index=video_index, video_count=len(config["playlist"]), user_id=user_id)
 
@@ -111,10 +115,11 @@ def statistics(db):
 
 @route('/save_rating', method='POST')
 @auth_basic(check_credentials)
-def saveRating(db,config):  # save rating for watched video
+def saveRating(db,config):  # save rating for watched video 
     # store : request.POST as json string in database
     timestamp = str(datetime.datetime.fromtimestamp(int(time.time())).strftime('%Y-%m-%d %H:%M:%S'))  # define structure of timestamp
     video_index = request.query.video_index  # extract current video_index from query
+    user_id=int(request.get_cookie("user_id"))
     db.execute('CREATE TABLE IF NOT EXISTS ratings (user_ID, video string, rating_filled string, timestamp);')
     db.execute('INSERT INTO ratings VALUES (?,?,?,?);',(user_id, video_index, request.body.read(), timestamp))
     db.commit()
@@ -130,6 +135,7 @@ def saveRating(db,config):  # save rating for watched video
 @route('/save_demographics', method='POST')
 @auth_basic(check_credentials)
 def saveDemographics(db, config):  # save user information (user_id is key in tables)
+    user_id=int(request.get_cookie("user_id"))
     db.execute('CREATE TABLE IF NOT EXISTS info (user_ID, user data);')
     db.execute('INSERT INTO info VALUES (?,?);',(user_id, request.body.read()))
     db.commit()

@@ -34,7 +34,7 @@ video_index needs to be given as input -->
 
       % include('templates/footer.tpl')
     </div>
-
+    
   </body>
 
 </html>
