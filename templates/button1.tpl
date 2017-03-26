@@ -7,12 +7,24 @@ Don't change the form attributes "action" and "method"-->
   <form action="/save_rating?video_index={{video_index}}" method="post"> 
     <div class="row">
       <div class="col-lg-6">
-        <button name="submit" value="better" class="btn-lg btn-success btn-block">Better</button>	
+        <button id="Button" name="submit" value="better" class="btn-lg btn-success btn-block" onclick="">Better</button>	
       </div>
       <div class="col-lg-6">
-        <button name="submit" value="worse" class="btn-lg btn-danger btn-block">Worse</button>	
+        <button id="Button" name="submit" value="worse" class="btn-lg btn-danger btn-block">Worse</button>	
       </div>
     </div>
   </form>
 </div>
 
+
+
+<script>
+// this script is reponsible for engaging the wait screen during playback
+$(document).ready(function(){
+    $("#Button").click(function(){
+        $("#playback").show();
+        $("#content").hide(); 
+    });
+
+});
+</script>

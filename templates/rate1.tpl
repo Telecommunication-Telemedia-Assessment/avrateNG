@@ -14,8 +14,9 @@ respective slider/button/radio templates at id="form-template".
 video_index needs to be given as input -->
 
   <body>
-
-    <div class="container">
+    <div id="playback"></div>
+    <div class="container" id="content">
+      
       <br>
       % include('templates/progressBar.tpl', video_index=video_index, video_count=video_count)
 
@@ -33,6 +34,7 @@ video_index needs to be given as input -->
       </div>
 
       % include('templates/footer.tpl')
+      
     </div>
     
   </body>

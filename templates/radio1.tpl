@@ -43,4 +43,12 @@ $(document).ready(function(){
         $("#submitButton").removeAttr("disabled");
     });
 });
+// this script is reponsible for engaging the wait screen during playback
+$(document).ready(function(){
+    $("#submitButton").click(function(){
+        $("#playback").show();
+        $("#content").hide(); 
+    });
+
+});
 </script>

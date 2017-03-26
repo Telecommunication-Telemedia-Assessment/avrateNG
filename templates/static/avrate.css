@@ -7,6 +7,18 @@
   overflow: hidden;
 }
 
+div#playback {
+  position: fixed;
+  margin: auto;
+  width: 100%;
+  height: 100%;
+  display: none;
+  background: url(/static/loader.gif) no-repeat;
+  background-position: center;
+  z-index: 10000000;
+  cursor: wait;
+    }
+
 .funkyradio label {
   width: 100%;
   border-radius: 3px;
@@ -82,7 +94,7 @@
   background-color: #5cb85c;
 }
 
-	.jumbotron {
+.jumbotron {
   margin: 20px 0;
   text-align: center;
   background-color:#BAE0FF;

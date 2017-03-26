@@ -63,6 +63,7 @@ def welcome(db, config):
 @route('/rate/<video_index>')  # Rating screen with video_index as variable
 @auth_basic(check_credentials)
 def rate(db, config, video_index):
+
     video_index = int(video_index)
     user_id = int(request.get_cookie("user_id"))
     session_state = int(request.get_cookie("session_state"))
@@ -110,7 +111,11 @@ def statistics(db):
     #  or https://developers.google.com/chart/
 
     # e.g. average rating per video file with confidence intervalls, or something else :)
-    return "not yet implemented"
+    
+    # at first get the data in the fitting form:
+    # ...turns out to be not so easy -> first start would be JSON objects of data...
+    
+    return template("templates/statistics.tpl", title="AvRate++",input_data=input_data)
 
 
 @route('/save_rating', method='POST')
@@ -138,7 +143,7 @@ def saveDemographics(db, config):  # save user information (user_id is key in ta
     user_id=int(request.get_cookie("user_id"))
     db.execute('CREATE TABLE IF NOT EXISTS info (user_ID, user data);')
     db.execute('INSERT INTO info VALUES (?,?);',(user_id, request.body.read()))
-    db.commit()
+    db.commit()    
     redirect('/finish')
 
 

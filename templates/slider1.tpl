@@ -4,7 +4,7 @@ Don't change the form attributes "action" and "method"-->
 
 
 <div class="container">
-  <form action="/save_rating?video_index={{video_index}}" method="post">
+  <form action="/save_rating?video_index={{video_index}}" method="post" enctype='application/json'>
     <div class="row">
       <div class="col-lg-10">
         <div class="input-group input-group-lg">
@@ -21,13 +21,21 @@ Don't change the form attributes "action" and "method"-->
 </div>
 
 
-<!-- this script enables the submit button after the slider was moved -->
+
 <script>
+// this script enables the submit button after the slider was moved 
 $(document).ready(function(){
     $("#slider").on('click touchstart', function(){
         $("#submitButton").removeAttr("disabled");
     });
 
 });
+// this script is reponsible for engaging the wait screen during playback
+$(document).ready(function(){
+    $("#submitButton").click(function(){
+        $("#playback").show();
+        $("#content").hide(); 
+    });
 
+});
 </script>
