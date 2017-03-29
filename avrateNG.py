@@ -126,6 +126,7 @@ def saveRating(db,config):  # save rating for watched video
     video_index = request.query.video_index  # extract current video_index from query
     user_id=int(request.get_cookie("user_id"))
     # TODO: add filename of video that was played
+    # TODO: maybe change storing of rating to something else than request.body.read()
     db.execute('CREATE TABLE IF NOT EXISTS ratings (user_ID, video string, rating_filled string, timestamp);')
     db.execute('INSERT INTO ratings VALUES (?,?,?,?);',(user_id, video_index, request.body.read(), timestamp))
     db.commit()
