@@ -68,19 +68,19 @@ def rate(db, config, video_index):
     user_id = int(request.get_cookie("user_id"))
     session_state = int(request.get_cookie("session_state"))
 
-    if video_index == session_state: 
+    if video_index == session_state:
         play_video = 1
     else:
         play_video = 0
-    
-    # play video only on first visit    
+
+    # play video only on first visit
     if play_video == 1:
         play(config, video_index)
         # play just one time
         play_video = 0
         session_state = session_state + 1
         response.set_cookie("session_state",str(session_state),path="/")
-              
+
 
     return template("templates/rate1.tpl", title="AvRate++", video_index=video_index, video_count=len(config["playlist"]), user_id=user_id)
 
@@ -111,20 +111,21 @@ def statistics(db):
     #  or https://developers.google.com/chart/
 
     # e.g. average rating per video file with confidence intervalls, or something else :)
-    
+
     # at first get the data in the fitting form:
     # ...turns out to be not so easy -> first start would be JSON objects of data...
-    
+
     return template("templates/statistics.tpl", title="AvRate++",input_data=input_data)
 
 
 @route('/save_rating', method='POST')
 @auth_basic(check_credentials)
-def saveRating(db,config):  # save rating for watched video 
+def saveRating(db,config):  # save rating for watched video
     # store : request.POST as json string in database
     timestamp = str(datetime.datetime.fromtimestamp(int(time.time())).strftime('%Y-%m-%d %H:%M:%S'))  # define structure of timestamp
     video_index = request.query.video_index  # extract current video_index from query
     user_id=int(request.get_cookie("user_id"))
+    # TODO: add filename of video that was played
     db.execute('CREATE TABLE IF NOT EXISTS ratings (user_ID, video string, rating_filled string, timestamp);')
     db.execute('INSERT INTO ratings VALUES (?,?,?,?);',(user_id, video_index, request.body.read(), timestamp))
     db.commit()
@@ -140,10 +141,10 @@ def saveRating(db,config):  # save rating for watched video
 @route('/save_demographics', method='POST')
 @auth_basic(check_credentials)
 def saveDemographics(db, config):  # save user information (user_id is key in tables)
-    user_id=int(request.get_cookie("user_id"))
+    user_id = int(request.get_cookie("user_id"))
     db.execute('CREATE TABLE IF NOT EXISTS info (user_ID, user data);')
     db.execute('INSERT INTO info VALUES (?,?);',(user_id, request.body.read()))
-    db.commit()    
+    db.commit()
     redirect('/finish')
 
 
