@@ -10,6 +10,7 @@ import loader
 from log import *
 from system import *
 
+
 def main(params=[]):
     parser = argparse.ArgumentParser(description='avrate++ convert ratings to csv for better handling', epilog="stg7 2017", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('dbfilename', type=str, help='filename of database with ratings')
@@ -31,8 +32,6 @@ def main(params=[]):
             csv_values = [str(row[i]) for i in range(len(row))]
             csv_values[schema.index("rating_filled")] = str(row[schema.index("rating_filled")]).split("=")[1].replace("'", "")
             csv.write(";".join(csv_values) + "\n")
-
-
 
     connection.commit()
     lInfo("done.")
