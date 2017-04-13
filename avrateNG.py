@@ -7,6 +7,7 @@ import threading
 import webbrowser
 import time
 import datetime
+import random
 
 # load libs from lib directory
 import loader
@@ -28,7 +29,6 @@ from bottle import static_file
 from bottle_sqlite import SQLitePlugin
 from bottle_config import ConfigPlugin
 
-# TODO: Some kind of wait screen while video is played (mobile)
 
 def check_credentials(username, password):
     config = ConfigPlugin._config
@@ -37,8 +37,8 @@ def check_credentials(username, password):
     return password == validPassword and username == validName
 
 
-def play(config, video_index):
-    video = config["playlist"][video_index]
+def play(config, video_index, playlist):
+    video = config[playlist][video_index]
     lInfo("play {}".format(video))
     shell_call(config["player"].format(filename=video))
 
@@ -57,7 +57,24 @@ def welcome(db, config):
     # initialize session_state variable (throws error when refreshing the page or going back)
     response.set_cookie("session_state","0",path="/")
 
-    return template("templates/welcome.tpl", title="AvRate++", user_id=user_id)
+    # generate shuffled playlist for every participant when shuffle mode is active
+    if config["shuffle"]:
+        print("playlist:",config["playlist"])
+        config["shuffled_playlist"] = random.sample(config["playlist"],len(config["playlist"]))
+        print("shuffled PL:",config["shuffled_playlist"])
+
+    # check if training stage is wished and/or training has already finished:
+    if config["trainingsplaylist"]: # check if training switch is toggled
+        if not request.get_cookie("training_state") == "done": # Cookie that controls if training was already done or is still open
+            response.set_cookie("training_state","open",path="/") 
+            response.set_cookie("training","1",path="/")
+            return template("templates/training_welcome.tpl", title="AvRate++", user_id=user_id)
+        else:
+            response.set_cookie("training","0",path="/")
+            return template("templates/welcome.tpl", title="AvRate++", user_id=user_id)  
+    else:
+        response.set_cookie("training","0",path="/")
+        return template("templates/welcome.tpl", title="AvRate++", user_id=user_id)
 
 
 @route('/rate/<video_index>')  # Rating screen with video_index as variable
@@ -75,14 +92,21 @@ def rate(db, config, video_index):
 
     # play video only on first visit
     if play_video == 1:
-        play(config, video_index)
+        if int(request.get_cookie("training")):
+            playlist = "trainingsplaylist"
+        else:
+            if config["shuffle"]:
+                playlist="shuffled_playlist"
+            else:
+                playlist = "playlist"
+        play(config, video_index, playlist)
         # play just one time
         play_video = 0
         session_state = session_state + 1
         response.set_cookie("session_state",str(session_state),path="/")
 
 
-    return template("templates/rate1.tpl", title="AvRate++", video_index=video_index, video_count=len(config["playlist"]), user_id=user_id)
+    return template("templates/rate1.tpl", title="AvRate++", video_index=video_index, video_count=len(config[playlist]), user_id=user_id)
 
 
 @route('/about') # About section
@@ -107,34 +131,54 @@ def info():
 @route('/statistics')
 @auth_basic(check_credentials)
 def statistics(db):
-    # TODO: implement a short diagram of stored ratings, e.g. using http://www.chartjs.org/
-    #  or https://developers.google.com/chart/
+    
+    # Get Data and video names for ratings and transform to JSON objects (better handling)
+    db_data=db.execute("SELECT video_name,rating,rating_type from ratings").fetchall() 
+    video_names = [row[0] for row in db_data]
+    rating_data = [int(row[1]) for row in db_data]
+    rating_types = [row[2] for row in db_data]
+    # extract all kinds of ratings from DB and convert to one dictionary
+    rating_dict = {}
+    for idx,video in enumerate(video_names):   
+        rating_dict.setdefault(rating_types[idx], {}).setdefault(video, []).append(rating_data[idx]) 
 
-    # e.g. average rating per video file with confidence intervalls, or something else :)
-
-    # at first get the data in the fitting form:
-    # ...turns out to be not so easy -> first start would be JSON objects of data...
-
-    return template("templates/statistics.tpl", title="AvRate++",input_data=input_data)
+    # return dictionary as JSON as interface to Java script (see statistics.tpl file for further info)
+    return template("templates/statistics.tpl", title="AvRate++",rating_dict=json.dumps(rating_dict))
 
 
 @route('/save_rating', method='POST')
 @auth_basic(check_credentials)
 def saveRating(db,config):  # save rating for watched video
-    # store : request.POST as json string in database
-    timestamp = str(datetime.datetime.fromtimestamp(int(time.time())).strftime('%Y-%m-%d %H:%M:%S'))  # define structure of timestamp
     video_index = request.query.video_index  # extract current video_index from query
-    user_id=int(request.get_cookie("user_id"))
-    # TODO: add filename of video that was played
-    # TODO: maybe change storing of rating to something else than request.body.read()
-    db.execute('CREATE TABLE IF NOT EXISTS ratings (user_ID, video string, rating_filled string, timestamp);')
-    db.execute('INSERT INTO ratings VALUES (?,?,?,?);',(user_id, video_index, request.body.read(), timestamp))
-    db.commit()
+    if not int(request.get_cookie("training")):
+        if config["shuffle"]:
+            playlist = "shuffled_playlist"
+        else:
+            playlist = "playlist"
+        timestamp = str(datetime.datetime.fromtimestamp(int(time.time())).strftime('%Y-%m-%d %H:%M:%S'))  # define structure of timestamp
+        video_name = os.path.splitext(os.path.basename(config[playlist][int(video_index)]))[0]
+        user_id=int(request.get_cookie("user_id"))
+        keys = []
+        values = []
+        for item in request.forms:
+            keys.append(item)
+            values.append(request.forms.get(item))
+        # HINT: When only one key/value pair is transmitted (as in rating screen), no ordering problems are encountered
+        db.execute('CREATE TABLE IF NOT EXISTS ratings (user_ID INTEGER, video_ID TEXT, video_name TEXT, rating_type TEXT, rating TEXT, timestamp TEXT);')
+        db.execute('INSERT INTO ratings VALUES (?,?,?,?,?,?);',(user_id, video_index, video_name, keys[0], values[0], timestamp))
+        db.commit()
+    else:
+        playlist = "trainingsplaylist"
 
     # check if last video in playlist
     video_index = int(video_index) + 1
-    if video_index > len(config["playlist"]) - 1:  # playlist over
-        redirect('/info')
+    if video_index > len(config[playlist]) - 1:  # playlist over
+        if int(request.get_cookie("training")): 
+            response.set_cookie("training_state","done")
+            redirect('/')
+        else:
+            response.set_cookie("training_state","open")
+            redirect('/info')
     else:
         redirect('/rate/' + str(video_index))  # next video
 
@@ -143,9 +187,13 @@ def saveRating(db,config):  # save rating for watched video
 @auth_basic(check_credentials)
 def saveDemographics(db, config):  # save user information (user_id is key in tables)
     user_id = int(request.get_cookie("user_id"))
-    db.execute('CREATE TABLE IF NOT EXISTS info (user_ID, user data);')
-    db.execute('INSERT INTO info VALUES (?,?);',(user_id, request.body.read()))
+    rData = request.forms
+    # TODO: Order of forms is always randomized when extracting form data -> some kind of ordering needs to be applied before storing (hardcoded for now)   
+    print(list(request.forms.items()))
+    db.execute('CREATE TABLE IF NOT EXISTS info (user_ID, first_name, last_name, age, comment);')
+    db.execute('INSERT INTO info VALUES (?,?,?,?,?);',(user_id, rData.firstName, rData.lastName, rData.age, rData.comment))
     db.commit()
+    
     redirect('/finish')
 
 
@@ -171,6 +219,8 @@ def main(params=[]):
     parser.add_argument('-configfilename', type=str, default="config.json", help='configuration file name')
     parser.add_argument('-playlist', type=str, default="playlist.list", help='video sequence play list')
     parser.add_argument('--standalone', action='store_true', help="run as standalone version")
+    parser.add_argument('-trainingsplaylist', type=str, default="", help='playlist for training session. If none is given: No training')
+    parser.add_argument('-shuffle', action='store_true', help='set when playlist should be randomized')   
 
     argsdict = vars(parser.parse_args())
     lInfo("read config {}".format(argsdict["configfilename"]))
@@ -191,6 +241,28 @@ def main(params=[]):
                 lError("'{}' is not a valid videofile, please check your playlistfile".format(video))
                 return -1
 
+
+    if argsdict["trainingsplaylist"]:
+        lInfo("read playlist for Training stage {}".format(argsdict["trainingsplaylist"]))
+        with open(argsdict["trainingsplaylist"]) as trainingsplaylistfile:
+            trainingsplaylist = [os.path.join(*x.strip().split("/")) for x in trainingsplaylistfile.readlines() if x.strip() != ""]
+            config["trainingsplaylist"] = trainingsplaylist  # add cleaned playlist to config
+            # check if each video exists
+            for video in trainingsplaylist:
+                if not os.path.isfile(video):
+                    lError("'{}' is not a valid videofile, please check your playlistfile".format(video))
+                    return -1
+    else:
+        config["trainingsplaylist"] = "" # empty string when no training is set
+
+
+    if argsdict["shuffle"]:
+        # easiest way: create shuffled temporary playlist and point to it instead of normal playlist (nothing else needs to be changed)
+        lInfo("shuffle mode active")       
+        config["shuffle"] = True
+    else:
+        config["shuffle"] = False
+        
     from sys import platform
     if platform == "linux" or platform == "linux2":
         config["player"] = config["player_linux"]  # override player command for linux

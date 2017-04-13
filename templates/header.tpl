@@ -10,10 +10,9 @@
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
-<!-- load chart API -->
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<!-- histogramt -->
-<script src="/static/histogram.js"></script>
+<!-- chart engine -->
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
 
 <link rel="stylesheet" href="/static/avrate.css"> 
 <link rel="stylesheet" href="/static/bootstrap-range-input.min.css">
