@@ -46,8 +46,8 @@ def play(config, video_index, playlist):
 @route('/')  # Welcome screen
 @auth_basic(check_credentials)
 def welcome(db, config):
+    
     # for every new start ("/"): user_id (cookie) is incremented by 1
-
     if not db.execute("SELECT * FROM sqlite_master WHERE type='table' AND name='ratings'").fetchone():
         user_id = 1 # if ratings table does not exist: first user_id = 1
     else:
@@ -57,11 +57,10 @@ def welcome(db, config):
     # initialize session_state variable (throws error when refreshing the page or going back)
     response.set_cookie("session_state","0",path="/")
 
-    # generate shuffled playlist for every participant when shuffle mode is active
+    # generate new shuffled playlist for every participant when shuffle mode is active
     if config["shuffle"]:
-        print("playlist:",config["playlist"])
         config["shuffled_playlist"] = random.sample(config["playlist"],len(config["playlist"]))
-        print("shuffled PL:",config["shuffled_playlist"])
+        
 
     # check if training stage is wished and/or training has already finished:
     if config["trainingsplaylist"]: # check if training switch is toggled
@@ -85,6 +84,16 @@ def rate(db, config, video_index):
     user_id = int(request.get_cookie("user_id"))
     session_state = int(request.get_cookie("session_state"))
 
+    # Select correct playlist for lookup
+    if int(request.get_cookie("training")):
+        playlist = "trainingsplaylist"
+    else:
+        if config["shuffle"]:
+            playlist="shuffled_playlist"
+        else:
+            playlist = "playlist"
+
+    # Check if video should be played or was already watched
     if video_index == session_state:
         play_video = 1
     else:
@@ -92,19 +101,11 @@ def rate(db, config, video_index):
 
     # play video only on first visit
     if play_video == 1:
-        if int(request.get_cookie("training")):
-            playlist = "trainingsplaylist"
-        else:
-            if config["shuffle"]:
-                playlist="shuffled_playlist"
-            else:
-                playlist = "playlist"
         play(config, video_index, playlist)
         # play just one time
         play_video = 0
         session_state = session_state + 1
         response.set_cookie("session_state",str(session_state),path="/")
-
 
     return template("templates/rate1.tpl", title="AvRate++", video_index=video_index, video_count=len(config[playlist]), user_id=user_id)
 
@@ -143,34 +144,65 @@ def statistics(db):
         rating_dict.setdefault(rating_types[idx], {}).setdefault(video, []).append(rating_data[idx]) 
 
     # return dictionary as JSON as interface to Java script (see statistics.tpl file for further info)
-    return template("templates/statistics.tpl", title="AvRate++",rating_dict=json.dumps(rating_dict))
+    return template("templates/statistics.tpl", title="AvRate++", rating_dict=json.dumps(rating_dict))
 
 
 @route('/save_rating', method='POST')
 @auth_basic(check_credentials)
 def saveRating(db,config):  # save rating for watched video
+
     video_index = request.query.video_index  # extract current video_index from query
-    if not int(request.get_cookie("training")):
-        if config["shuffle"]:
-            playlist = "shuffled_playlist"
-        else:
-            playlist = "playlist"
-        timestamp = str(datetime.datetime.fromtimestamp(int(time.time())).strftime('%Y-%m-%d %H:%M:%S'))  # define structure of timestamp
-        video_name = os.path.splitext(os.path.basename(config[playlist][int(video_index)]))[0]
-        user_id=int(request.get_cookie("user_id"))
+    timestamp = str(datetime.datetime.fromtimestamp(int(time.time())).strftime('%Y-%m-%d %H:%M:%S'))  # define timestamp
+    user_id=int(request.get_cookie("user_id"))
+
+    # Get Mousetracker and write to DB
+    if "mouse_track" in request.forms:
+        tracker = request.forms["mouse_track"]
+        del request.forms["mouse_track"]
+    else:
+        tracker = "No tracking data submitted."
+         
+
+    # Get POST Data ratings and write to DB
+    if len(request.forms.keys()) == 1:
         keys = []
         values = []
         for item in request.forms:
             keys.append(item)
             values.append(request.forms.get(item))
-        # HINT: When only one key/value pair is transmitted (as in rating screen), no ordering problems are encountered
+    else:
+        lError("The submitted rating form has more than one submitted key/value pair.")
+
+    # Choose DB table to store the ratings
+    if not int(request.get_cookie("training")):
+        
+        # Lookup the correct playlist
+        if config["shuffle"]:
+            playlist = "shuffled_playlist"
+        else:
+            playlist = "playlist"
+        
+        video_name = os.path.splitext(os.path.basename(config[playlist][int(video_index)]))[0]
+
+        # Store rating to DB 
         db.execute('CREATE TABLE IF NOT EXISTS ratings (user_ID INTEGER, video_ID TEXT, video_name TEXT, rating_type TEXT, rating TEXT, timestamp TEXT);')
         db.execute('INSERT INTO ratings VALUES (?,?,?,?,?,?);',(user_id, video_index, video_name, keys[0], values[0], timestamp))
         db.commit()
+
+        # Store mouse tracking data to DB
+        db.execute('CREATE TABLE IF NOT EXISTS tracker (user_ID INTEGER, video_ID TEXT, video_name TEXT, tracker TEXT);')
+        db.execute('INSERT INTO tracker VALUES (?,?,?,?);',(user_id, video_index, video_name, tracker))
+        db.commit()
+
     else:
         playlist = "trainingsplaylist"
+        video_name = os.path.splitext(os.path.basename(config[playlist][int(video_index)]))[0]
 
-    # check if last video in playlist
+        db.execute('CREATE TABLE IF NOT EXISTS training (user_ID INTEGER, video_ID TEXT, video_name TEXT, rating_type TEXT, rating TEXT, timestamp TEXT);')
+        db.execute('INSERT INTO training VALUES (?,?,?,?,?,?);',(user_id, video_index, video_name, keys[0], values[0], timestamp))
+        db.commit()
+
+    # check if this was the last video in playlist
     video_index = int(video_index) + 1
     if video_index > len(config[playlist]) - 1:  # playlist over
         if int(request.get_cookie("training")): 
@@ -185,19 +217,17 @@ def saveRating(db,config):  # save rating for watched video
 
 @route('/save_demographics', method='POST')
 @auth_basic(check_credentials)
-def saveDemographics(db, config):  # save user information (user_id is key in tables)
+def saveDemographics(db, config):  # save user information (user_id is key in tables) as JSON string
     user_id = int(request.get_cookie("user_id"))
-    rData = request.forms
-    # TODO: Order of forms is always randomized when extracting form data -> some kind of ordering needs to be applied before storing (hardcoded for now)   
-    print(list(request.forms.items()))
-    db.execute('CREATE TABLE IF NOT EXISTS info (user_ID, first_name, last_name, age, comment);')
-    db.execute('INSERT INTO info VALUES (?,?,?,?,?);',(user_id, rData.firstName, rData.lastName, rData.age, rData.comment))
+
+    db.execute('CREATE TABLE IF NOT EXISTS info (user_ID, info_json TEXT);')
+    db.execute('INSERT INTO info VALUES (?,?);',(user_id, json.dumps(dict(request.forms))))
     db.commit()
     
     redirect('/finish')
 
 
-@route('/static/<filename:path>',name='static')  # access the stylesheets
+@route('/static/<filename:path>',name='static')  # access the stylesheets and static files (JS files,...)
 @auth_basic(check_credentials)
 def server_static(filename):
     # needed for routing the static files (CSS)

@@ -7,6 +7,8 @@
   <head>
     <title>{{title}}</title>
     % include('templates/header.tpl')
+    <!-- track mouse positions -->
+    <script src="/static/track_mouse.js"></script>
   </head>
 
 <!-- Basic template for the rating procedure. For different rating forms insert 
@@ -28,14 +30,17 @@ video_index needs to be given as input -->
 
       <div class="row" id="form-template">
         % include('templates/slider1.tpl', video_index=video_index)   # replace with slider1.tpl or button1.tpl
-        
+      <form method="post" id="tracking_form">
+            
+      </form> 
         <br><br>
         
       </div>
 
       % include('templates/footer.tpl')
       
-    </div>
+    </div> 
+    
     
   </body>
 
