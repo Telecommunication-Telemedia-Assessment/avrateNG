@@ -107,7 +107,7 @@ def rate(db, config, video_index):
         session_state = session_state + 1
         response.set_cookie("session_state",str(session_state),path="/")
 
-    return template("templates/rate1.tpl", title="AvRate++", video_index=video_index, video_count=len(config[playlist]), user_id=user_id)
+    return template("templates/rate1.tpl", title="AvRate++", rating_template=config["rating_template"], video_index=video_index, video_count=len(config[playlist]), user_id=user_id)
 
 
 @route('/about') # About section
@@ -210,7 +210,7 @@ def saveRating(db,config):  # save rating for watched video
             redirect('/')
         else:
             response.set_cookie("training_state","open")
-            redirect('/info')
+            redirect('/finish')
     else:
         redirect('/rate/' + str(video_index))  # next video
 
@@ -224,7 +224,7 @@ def saveDemographics(db, config):  # save user information (user_id is key in ta
     db.execute('INSERT INTO info VALUES (?,?);',(user_id, json.dumps(dict(request.forms))))
     db.commit()
     
-    redirect('/finish')
+    redirect('/rate/0')
 
 
 @route('/static/<filename:path>',name='static')  # access the stylesheets and static files (JS files,...)
@@ -250,7 +250,8 @@ def main(params=[]):
     parser.add_argument('-playlist', type=str, default="playlist.list", help='video sequence play list')
     parser.add_argument('--standalone', action='store_true', help="run as standalone version")
     parser.add_argument('-trainingsplaylist', type=str, default="", help='playlist for training session. If none is given: No training')
-    parser.add_argument('-shuffle', action='store_true', help='set when playlist should be randomized')   
+    parser.add_argument('-shuffle', action='store_true', help='Set, when playlist should be randomized')  
+    parser.add_argument('-voiceRecognition', action='store_true', help='Set, when selection should be made using voice recognition')  
 
     argsdict = vars(parser.parse_args())
     lInfo("read config {}".format(argsdict["configfilename"]))
@@ -292,6 +293,12 @@ def main(params=[]):
         config["shuffle"] = True
     else:
         config["shuffle"] = False
+
+    if argsdict["voiceRecognition"]:
+        # change the rating template to the (radio-) one including voice recognition
+        lInfo("Voice recognition active: Automatically loading radio-button template '{}'".format(config["voiceRecognition_template"]))       
+        config["rating_template"] = config["voiceRecognition_template"]
+
         
     from sys import platform
     if platform == "linux" or platform == "linux2":

@@ -9,6 +9,15 @@
     % include('templates/header.tpl')
     <!-- track mouse positions -->
     <script src="/static/track_mouse.js"></script>
+    <script>
+        // this script is reponsible for engaging the wait screen during playback
+        $(document).ready(function(){
+            $("#submitButton").click(function(){
+            $("#playback").show();
+            $("#content").hide(); 
+            });
+        });
+    </script>
   </head>
 
 <!-- Basic template for the rating procedure. For different rating forms insert 
@@ -29,7 +38,7 @@ video_index needs to be given as input -->
       </div>
 
       <div class="row" id="form-template">
-        % include('templates/slider1.tpl', video_index=video_index)   # replace with slider1.tpl or button1.tpl
+        % include('templates/' + rating_template, video_index=video_index)   # replace with slider1.tpl or button1.tpl
       <form method="post" id="tracking_form">
             
       </form> 

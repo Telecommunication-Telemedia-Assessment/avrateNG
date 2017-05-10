@@ -7,7 +7,8 @@
         data_obj={} //bring data to appropriate structure for plotting
 
         for (var video_name in data_as_json) {
-           data_obj["data_"+video_name]={y: data_as_json[video_name], name: video_name, type: 'box'};        
+           data_obj[video_name]={y: data_as_json[video_name], name: video_name, type: 'box'};     
+            console.log(data_obj)   
           }
       
         var plot_data = [] //create array to plot the data
@@ -50,7 +51,7 @@
             range: [1,5]
             },
           };
-        var plot_data = get_plot_data(json_data['radio'])
+        var plot_data = get_plot_data(json_data['radio']);
         Plotly.newPlot("radio_boxplot", plot_data, layout_radio); //plot the data
       </script>
     </div>
