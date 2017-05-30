@@ -250,7 +250,7 @@ def main(params=[]):
     parser.add_argument('-playlist', type=str, default="playlist.list", help='video sequence play list')
     parser.add_argument('--standalone', action='store_true', help="run as standalone version")
     parser.add_argument('-trainingsplaylist', type=str, default="", help='playlist for training session. If none is given: No training')
-    parser.add_argument('-shuffle', action='store_true', help='Set, when playlist should be randomized')
+    parser.add_argument('-shuffle', action='store_false', help='Set, when playlist should be randomized')
     parser.add_argument('-voiceRecognition', action='store_true', help='Set, when selection should be made using voice recognition')
 
     argsdict = vars(parser.parse_args())
