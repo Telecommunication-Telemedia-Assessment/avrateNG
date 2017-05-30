@@ -10,13 +10,13 @@ var validData = { // Define valid options here
 
 
 window.onload = function listen(){ // main function
-    
+
     var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition)();
     recognition.lang = 'de';
     recognition.interimResults = false;
     recognition.maxAlternatives = 5;
     recognition.start();
-    
+
 
     recognition.onresult = function(event) { //the event holds the results
         if (typeof(event.results) === "undefined") { //Something went wrong…
@@ -29,10 +29,10 @@ window.onload = function listen(){ // main function
             console.log("Captured speech:", capture);
             return capture
         };
-    
-    }; 
 
-    recognition.onend = function(){ 
+    };
+
+    recognition.onend = function(){
         //capture = "good" // Debug: This should be the result from the recognition
 
         if (typeof(capture) === "undefined" || capture == null){ // No Result from speech recognition -> Try Again!
@@ -55,7 +55,7 @@ window.onload = function listen(){ // main function
             return capture
         };
     };
-    
+
 };
 
 
@@ -73,9 +73,9 @@ function checkCapture(capture){ // Check if recognized speech is valid (defined 
         option = options[i];
         if (validData[option].indexOf(capture.toLowerCase())>=0){
             matching_Idx = option;
-            return matching_Idx};  
-    };  
-    return matching_Idx  
+            return matching_Idx};
+    };
+    return matching_Idx
 }
 
 function submit_capture(data){ // Give voice feedback over chosen option and submit
@@ -89,6 +89,6 @@ function submit_capture(data){ // Give voice feedback over chosen option and sub
 
     document.getElementById("voice").disabled = false; // Only submit value when recognized, else: click button
     setTimeout(function(){document.getElementById("form1").submit();},4000) // Wait 4s until feedback was given
-    
+
 }
- 
+

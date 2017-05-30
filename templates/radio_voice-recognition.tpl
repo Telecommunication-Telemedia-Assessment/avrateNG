@@ -1,10 +1,10 @@
-<!-- this template defines a radio button form. 
+<!-- this template defines a radio button form.
 When creating custom forms copy this basic structure.
 Don't change the form attributes "action" and "method" or the button ID's-->
 
 
 <div class="container">
-  
+
   <form id="form1" action="/save_rating?video_index={{video_index}}" method="post">
     <div class="row">
       <div class="funkyradio">
@@ -51,7 +51,7 @@ $(document).ready(function(){
 $(document).ready(function(){
     $("#submitButton").click(function(){
         $("#playback").show();
-        $("#content").hide(); 
+        $("#content").hide();
     });
 
 });

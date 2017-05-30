@@ -46,7 +46,7 @@ def play(config, video_index, playlist):
 @route('/')  # Welcome screen
 @auth_basic(check_credentials)
 def welcome(db, config):
-    
+
     # for every new start ("/"): user_id (cookie) is incremented by 1
     if not db.execute("SELECT * FROM sqlite_master WHERE type='table' AND name='ratings'").fetchone():
         user_id = 1 # if ratings table does not exist: first user_id = 1
@@ -60,17 +60,17 @@ def welcome(db, config):
     # generate new shuffled playlist for every participant when shuffle mode is active
     if config["shuffle"]:
         config["shuffled_playlist"] = random.sample(config["playlist"],len(config["playlist"]))
-        
+
 
     # check if training stage is wished and/or training has already finished:
     if config["trainingsplaylist"]: # check if training switch is toggled
         if not request.get_cookie("training_state") == "done": # Cookie that controls if training was already done or is still open
-            response.set_cookie("training_state","open",path="/") 
+            response.set_cookie("training_state","open",path="/")
             response.set_cookie("training","1",path="/")
             return template("templates/training_welcome.tpl", title="AvRate++", user_id=user_id)
         else:
             response.set_cookie("training","0",path="/")
-            return template("templates/welcome.tpl", title="AvRate++", user_id=user_id)  
+            return template("templates/welcome.tpl", title="AvRate++", user_id=user_id)
     else:
         response.set_cookie("training","0",path="/")
         return template("templates/welcome.tpl", title="AvRate++", user_id=user_id)
@@ -132,16 +132,16 @@ def info():
 @route('/statistics')
 @auth_basic(check_credentials)
 def statistics(db):
-    
+
     # Get Data and video names for ratings and transform to JSON objects (better handling)
-    db_data=db.execute("SELECT video_name,rating,rating_type from ratings").fetchall() 
+    db_data=db.execute("SELECT video_name,rating,rating_type from ratings").fetchall()
     video_names = [row[0] for row in db_data]
     rating_data = [int(row[1]) for row in db_data]
     rating_types = [row[2] for row in db_data]
     # extract all kinds of ratings from DB and convert to one dictionary
     rating_dict = {}
-    for idx,video in enumerate(video_names):   
-        rating_dict.setdefault(rating_types[idx], {}).setdefault(video, []).append(rating_data[idx]) 
+    for idx,video in enumerate(video_names):
+        rating_dict.setdefault(rating_types[idx], {}).setdefault(video, []).append(rating_data[idx])
 
     # return dictionary as JSON as interface to Java script (see statistics.tpl file for further info)
     return template("templates/statistics.tpl", title="AvRate++", rating_dict=json.dumps(rating_dict))
@@ -161,7 +161,7 @@ def saveRating(db,config):  # save rating for watched video
         del request.forms["mouse_track"]
     else:
         tracker = "No tracking data submitted."
-         
+
 
     # Get POST Data ratings and write to DB
     if len(request.forms.keys()) == 1:
@@ -175,16 +175,16 @@ def saveRating(db,config):  # save rating for watched video
 
     # Choose DB table to store the ratings
     if not int(request.get_cookie("training")):
-        
+
         # Lookup the correct playlist
         if config["shuffle"]:
             playlist = "shuffled_playlist"
         else:
             playlist = "playlist"
-        
+
         video_name = os.path.splitext(os.path.basename(config[playlist][int(video_index)]))[0]
 
-        # Store rating to DB 
+        # Store rating to DB
         db.execute('CREATE TABLE IF NOT EXISTS ratings (user_ID INTEGER, video_ID TEXT, video_name TEXT, rating_type TEXT, rating TEXT, timestamp TEXT);')
         db.execute('INSERT INTO ratings VALUES (?,?,?,?,?,?);',(user_id, video_index, video_name, keys[0], values[0], timestamp))
         db.commit()
@@ -205,7 +205,7 @@ def saveRating(db,config):  # save rating for watched video
     # check if this was the last video in playlist
     video_index = int(video_index) + 1
     if video_index > len(config[playlist]) - 1:  # playlist over
-        if int(request.get_cookie("training")): 
+        if int(request.get_cookie("training")):
             response.set_cookie("training_state","done")
             redirect('/')
         else:
@@ -223,7 +223,7 @@ def saveDemographics(db, config):  # save user information (user_id is key in ta
     db.execute('CREATE TABLE IF NOT EXISTS info (user_ID, info_json TEXT);')
     db.execute('INSERT INTO info VALUES (?,?);',(user_id, json.dumps(dict(request.forms))))
     db.commit()
-    
+
     redirect('/rate/0')
 
 
@@ -250,8 +250,8 @@ def main(params=[]):
     parser.add_argument('-playlist', type=str, default="playlist.list", help='video sequence play list')
     parser.add_argument('--standalone', action='store_true', help="run as standalone version")
     parser.add_argument('-trainingsplaylist', type=str, default="", help='playlist for training session. If none is given: No training')
-    parser.add_argument('-shuffle', action='store_true', help='Set, when playlist should be randomized')  
-    parser.add_argument('-voiceRecognition', action='store_true', help='Set, when selection should be made using voice recognition')  
+    parser.add_argument('-shuffle', action='store_true', help='Set, when playlist should be randomized')
+    parser.add_argument('-voiceRecognition', action='store_true', help='Set, when selection should be made using voice recognition')
 
     argsdict = vars(parser.parse_args())
     lInfo("read config {}".format(argsdict["configfilename"]))
@@ -289,17 +289,17 @@ def main(params=[]):
 
     if argsdict["shuffle"]:
         # easiest way: create shuffled temporary playlist and point to it instead of normal playlist (nothing else needs to be changed)
-        lInfo("shuffle mode active")       
+        lInfo("shuffle mode active")
         config["shuffle"] = True
     else:
         config["shuffle"] = False
 
     if argsdict["voiceRecognition"]:
         # change the rating template to the (radio-) one including voice recognition
-        lInfo("Voice recognition active: Automatically loading radio-button template '{}'".format(config["voiceRecognition_template"]))       
+        lInfo("Voice recognition active: Automatically loading radio-button template '{}'".format(config["voiceRecognition_template"]))
         config["rating_template"] = config["voiceRecognition_template"]
 
-        
+
     from sys import platform
     if platform == "linux" or platform == "linux2":
         config["player"] = config["player_linux"]  # override player command for linux
