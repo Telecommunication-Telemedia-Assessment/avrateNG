@@ -60,11 +60,10 @@ Don't change the form attributes "action" and "method"-->
         </div>
         <div class="col-lg-2">
           <button id="submitButton" class="btn-lg btn-success">OK</button>
-        </div>    
         </div>
       </form>
-        
-      <div class="container" id="footer">   
+
+      <div class="container" id="footer">
         % include('templates/footer.tpl')
       </div>
     </div>
