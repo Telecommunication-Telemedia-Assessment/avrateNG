@@ -5,6 +5,6 @@
     "http_user_name": "max",
     "http_user_password": "123",
     "http_port" : "12347",
-    "rating_template" : "slider1.tpl",
+    "rating_template" : "multi_slider1.tpl",
     "voiceRecognition_template" : "radio_voice-recognition.tpl"
 }

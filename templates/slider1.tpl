@@ -1,16 +1,16 @@
-<!-- this template defines a simple slider form. 
+<!-- this template defines a simple slider form.
 When creating custom forms copy this basic structure.
 Don't change the form attributes "action" and "method"-->
 
 
 <div class="container">
   <form action="/save_rating?video_index={{video_index}}" method="post">
-    
+
     <div class="row">
       <h3>
-      <div class="col-lg-4 col-lg-offset-4"> 
+      <div class="col-lg-4 col-lg-offset-4">
         <output id="slider_value"><h3>Current slider value: 50 </script></h3></output>
-      </div>  
+      </div>
       </h3>
     </div>
 

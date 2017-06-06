@@ -147,13 +147,46 @@ def statistics(db):
     return template("templates/statistics.tpl", title="AvRate++", rating_dict=json.dumps(rating_dict))
 
 
+def store_rating_key_value_pair(db, config, user_id, timestamp, video_index, key, value, tracker, training=False):
+
+    # Choose DB table to store the ratings
+    if not training:
+
+        # Lookup the correct playlist
+        if config["shuffle"]:
+            playlist = "shuffled_playlist"
+        else:
+            playlist = "playlist"
+        video_name = config[playlist][int(video_index)]
+
+
+        # Store rating to DB
+        db.execute('CREATE TABLE IF NOT EXISTS ratings (user_ID INTEGER, video_ID TEXT, video_name TEXT, rating_type TEXT, rating TEXT, timestamp TEXT);')
+        db.execute('INSERT INTO ratings VALUES (?,?,?,?,?,?);',(user_id, video_index, video_name, key, value, timestamp))
+        db.commit()
+
+        # Store mouse tracking data to DB
+        db.execute('CREATE TABLE IF NOT EXISTS tracker (user_ID INTEGER, video_ID TEXT, video_name TEXT, tracker TEXT);')
+        db.execute('INSERT INTO tracker VALUES (?,?,?,?);',(user_id, video_index, video_name, tracker))
+        db.commit()
+
+    else:
+        playlist = "trainingsplaylist"
+
+        video_name = config[playlist][int(video_index)]
+        db.execute('CREATE TABLE IF NOT EXISTS training (user_ID INTEGER, video_ID TEXT, video_name TEXT, rating_type TEXT, rating TEXT, timestamp TEXT);')
+        db.execute('INSERT INTO training VALUES (?,?,?,?,?,?);',(user_id, video_index, video_name, key, value, timestamp))
+        db.commit()
+
+    return playlist
+
 @route('/save_rating', method='POST')
 @auth_basic(check_credentials)
-def saveRating(db,config):  # save rating for watched video
+def saveRating(db, config):  # save rating for watched video
 
     video_index = request.query.video_index  # extract current video_index from query
     timestamp = str(datetime.datetime.fromtimestamp(int(time.time())).strftime('%Y-%m-%d %H:%M:%S'))  # define timestamp
-    user_id=int(request.get_cookie("user_id"))
+    user_id = int(request.get_cookie("user_id"))
 
     # Get Mousetracker and write to DB
     if "mouse_track" in request.forms:
@@ -164,43 +197,17 @@ def saveRating(db,config):  # save rating for watched video
 
 
     # Get POST Data ratings and write to DB
-    if len(request.forms.keys()) == 1:
-        keys = []
-        values = []
+    if len(request.forms.keys()) >= 1:
+        request_data_pairs = {}
         for item in request.forms:
-            keys.append(item)
-            values.append(request.forms.get(item))
+            request_data_pairs[item] = request.forms.get(item)
     else:
-        lError("The submitted rating form has more than one submitted key/value pair.")
+        lError("The submitted rating form submitted key/value pairs.")
 
-    # Choose DB table to store the ratings
-    if not int(request.get_cookie("training")):
 
-        # Lookup the correct playlist
-        if config["shuffle"]:
-            playlist = "shuffled_playlist"
-        else:
-            playlist = "playlist"
-
-        video_name = os.path.splitext(os.path.basename(config[playlist][int(video_index)]))[0]
-
-        # Store rating to DB
-        db.execute('CREATE TABLE IF NOT EXISTS ratings (user_ID INTEGER, video_ID TEXT, video_name TEXT, rating_type TEXT, rating TEXT, timestamp TEXT);')
-        db.execute('INSERT INTO ratings VALUES (?,?,?,?,?,?);',(user_id, video_index, video_name, keys[0], values[0], timestamp))
-        db.commit()
-
-        # Store mouse tracking data to DB
-        db.execute('CREATE TABLE IF NOT EXISTS tracker (user_ID INTEGER, video_ID TEXT, video_name TEXT, tracker TEXT);')
-        db.execute('INSERT INTO tracker VALUES (?,?,?,?);',(user_id, video_index, video_name, tracker))
-        db.commit()
-
-    else:
-        playlist = "trainingsplaylist"
-        video_name = os.path.splitext(os.path.basename(config[playlist][int(video_index)]))[0]
-
-        db.execute('CREATE TABLE IF NOT EXISTS training (user_ID INTEGER, video_ID TEXT, video_name TEXT, rating_type TEXT, rating TEXT, timestamp TEXT);')
-        db.execute('INSERT INTO training VALUES (?,?,?,?,?,?);',(user_id, video_index, video_name, keys[0], values[0], timestamp))
-        db.commit()
+    training = int(request.get_cookie("training"))
+    for key, value in request_data_pairs.items():
+        playlist = store_rating_key_value_pair(db, config, user_id, timestamp, video_index, key, value, tracker, training)
 
     # check if this was the last video in playlist
     video_index = int(video_index) + 1

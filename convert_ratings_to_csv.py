@@ -25,12 +25,12 @@ def main(params=[]):
     for row in connection.execute("""pragma table_info('ratings') """):
         schema[row[1]] = ""
     schema = sorted(schema.keys())
-
+    print(schema)
     with open(argsdict["cvsfilename"], "w") as csv:
         csv.write(";".join(schema) + "\n")
         for row in connection.execute("""select {} from ratings; """.format(",".join(schema))):
             csv_values = [str(row[i]) for i in range(len(row))]
-            csv_values[schema.index("rating_filled")] = str(row[schema.index("rating_filled")]).split("=")[1].replace("'", "")
+            #csv_values[schema.index("rating_filled")] = str(row[schema.index("rating_filled")]).split("=")[1].replace("'", "")
             csv.write(";".join(csv_values) + "\n")
 
     connection.commit()
