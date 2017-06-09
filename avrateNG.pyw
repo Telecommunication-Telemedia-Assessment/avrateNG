@@ -257,7 +257,6 @@ def main(params=[]):
     parser.add_argument('-playlist', type=str, default="playlist.list", help='video sequence play list')
     parser.add_argument('--standalone', action='store_true', help="run as standalone version")
     parser.add_argument('-trainingsplaylist', type=str, default="", help='playlist for training session. If none is given: No training')
-    parser.add_argument('-shuffle', action='store_false', help='randomized playlist')
     parser.add_argument('-voiceRecognition', action='store_true', help='set, when selection should be made using voice recognition')
 
     argsdict = vars(parser.parse_args())
@@ -294,12 +293,6 @@ def main(params=[]):
         config["trainingsplaylist"] = "" # empty string when no training is set
 
 
-    if argsdict["shuffle"]:
-        # easiest way: create shuffled temporary playlist and point to it instead of normal playlist (nothing else needs to be changed)
-        lInfo("shuffle mode active")
-        config["shuffle"] = True
-    else:
-        config["shuffle"] = False
 
     if argsdict["voiceRecognition"]:
         # change the rating template to the (radio-) one including voice recognition
