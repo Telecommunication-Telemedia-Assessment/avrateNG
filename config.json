@@ -6,5 +6,6 @@
     "http_user_password": "123",
     "http_port" : "12347",
     "rating_template" : "multi_slider1.tpl",
-    "voiceRecognition_template" : "radio_voice-recognition.tpl"
+    "voiceRecognition_template" : "radio_voice-recognition.tpl",
+    "shuffle": true
 }
