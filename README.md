@@ -17,7 +17,7 @@ First Steps
 -----------
 Before you should start with your specific processed video files, you should try to run avrateNG.
 If you correctly checkout the repository, everything should work.
-So just start `avrateNG.pyw` and open http://0.0.0.0:12347/ in your favorite webbrowser.
+So just start `avrateNG.py` and open http://0.0.0.0:12347/ in your favorite webbrowser.
 (default user/password is max, and 123).
 
 All ratings are stored in a sqlite3 database, for a simple conversion you can use `convert_ratings_to_csv.py` this script will create a csv file of all stored ratings.
@@ -68,7 +68,7 @@ you can also define a training playlist `training.list` all filenames can also b
 ### Advanced command line flags
 just run `avrateNG.py -h` and you will get the following screen:
 ```
-usage: avrateNG.pyw [-h] [-configfilename CONFIGFILENAME] [-playlist PLAYLIST]
+usage: avrateNG.py [-h] [-configfilename CONFIGFILENAME] [-playlist PLAYLIST]
                     [--standalone] [-trainingsplaylist TRAININGSPLAYLIST]
                     [-shuffle] [-voiceRecognition]
 
