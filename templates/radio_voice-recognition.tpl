@@ -3,6 +3,7 @@ When creating custom forms copy this basic structure.
 Don't change the form attributes "action" and "method" or the button ID's-->
 
 
+
 <div class="container">
 
   <form id="form1" action="/save_rating?video_index={{video_index}}" method="post">
@@ -33,12 +34,12 @@ Don't change the form attributes "action" and "method" or the button ID's-->
     <div class="row">
       <br>
       <input type="hidden" id="voice" name="radio" disabled/>
-      <button id="submitButton" class="btn-lg btn-success btn-block" disabled>Please say your answer out loud!</button>
+      <button id="submitButton" class="btn-lg btn-success btn-block" disabled>Please say your answer (1-5) out loud!</button>
     </div>
   </form>
 </div>
 
-<script src="/static/speech_recognition.js"></script>
+<script src="/static/speech_recognition_exp.js"></script>
 
 <script>
 // this script enables the submit button after one option was checked
@@ -49,7 +50,7 @@ $(document).ready(function(){
 });
 // this script is reponsible for engaging the wait screen during playback
 $(document).ready(function(){
-    $("#submitButton").click(function(){
+    $("#form1").on('submit',function(){
         $("#playback").show();
         $("#content").hide();
     });

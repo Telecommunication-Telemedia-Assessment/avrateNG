@@ -108,3 +108,9 @@ div#playback {
   font-size: 21px;
   padding: 14px 24px;
 	}
+
+.glyphicon-record-right {
+float: right;
+margin-top: 2px;
+margin-right: -6px;
+}
