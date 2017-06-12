@@ -1,5 +1,6 @@
 TODOS
 -----
+* add template folder as configarable
 * move some command line flags to config file, because it is easier for windows users to configure
 * add current slider value to slider template
 * change styles of templates for rating so somehow optimize users perception of rating scale scheme

@@ -39,7 +39,7 @@ Don't change the form attributes "action" and "method" or the button ID's-->
   </form>
 </div>
 
-<script src="/static/speech_recognition_exp.js"></script>
+<script src="/static/speech_recognition.js"></script>
 
 <script>
 // this script enables the submit button after one option was checked

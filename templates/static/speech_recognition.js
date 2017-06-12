@@ -54,13 +54,13 @@ function listen(){ // main function
         }
         else {
             console.log('Recognition stopped')
-            
+
         }
     };
 
   recognition.onerror = function(event) {
     if (event.error == 'no-speech') {
-      
+
       console.log('info_no_speech');
       ignore_onend = true;
     }
@@ -80,6 +80,7 @@ function listen(){ // main function
 
 
 function talk(text){ // Define what should be said or done when speech could not be recognized properly
+    console.log("talk " + text);
     var synth = window.speechSynthesis;
     msg = new SpeechSynthesisUtterance(text);
     msg.lang = 'en-US';
@@ -101,7 +102,7 @@ function checkCapture(capture){ // Check if recognized speech is valid (defined 
 function submit_capture(data){ // Give voice feedback over chosen option and submit
     talk("Your answer is:" + data + ". Going to next video...");
 
-    document.getElementById("radio"+data).checked=true;
+    document.getElementById("radio" + data).checked=true;
     document.getElementById("voice").disabled = false; // Only submit value when recognized, else: click button
     setTimeout(function(){document.getElementById("form1").submit();
                           $("#playback").show();
