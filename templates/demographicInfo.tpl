@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
+  <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="author" content="Max" >
-  <head>
     <title>{{title}}</title>
     % include('templates/header.tpl')
     <script>
@@ -17,16 +17,16 @@
             });
         });
     </script>
-  </head>
 
-  <style>
-    .input-group-addon { 
-    width: 150px; 
-    }
-    .input-group { 
-    width: 100%; 
-    }
-  </style>
+    <style>
+      .input-group-addon { 
+      width: 150px; 
+      }
+      .input-group { 
+      width: 100%; 
+      }
+    </style>
+  </head>
 
 <!-- this template contains the text input fields for the demographic user info. 
 When creating custom forms stick to this structure and add or remove the custom fields.
