@@ -7,6 +7,11 @@
   overflow: hidden;
 }
 
+/* TODO: change to a cleaner solution for allowing a compact representation of choices? */
+.funkyradio-compact > div {
+    display: inline-block;
+}
+
 div#playback {
   position: fixed;
   margin: auto;
@@ -24,6 +29,8 @@ div#playback {
   border-radius: 3px;
   border: 1px solid #D1D3D4;
   font-weight: normal;
+
+  padding-right: 1em;
 }
 
 .funkyradio input[type="radio"]:empty,
