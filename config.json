@@ -5,7 +5,12 @@
     "http_user_name": "max",
     "http_user_password": "123",
     "http_port" : "12347",
+    "playlist"  : "playlist.list",
+    "template_folder" : "templates",
+    "training"  :  true,
+    "trainingsplaylist" :   "training.list",
     "rating_template" : "rating_and_explanations_form1.tpl",
+    "voiceRecognition"  :   false,
     "voiceRecognition_template" : "radio_voice-recognition.tpl",
     "shuffle": true
 }

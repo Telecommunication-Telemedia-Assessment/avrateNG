@@ -1,7 +1,5 @@
 TODOS
 -----
-* add template folder as configarable
-* move some command line flags to config file, because it is easier for windows users to configure
 * speech controling of rating: first steps
 * maybe add some "webcamera" recoding for eye tracking ...
     * reuse pierres ruby hackish
@@ -15,3 +13,5 @@ skipped
 DONE
 ----
 * add current slider value to slider template
+* add template folder as configarable
+* move some command line flags to config file, because it is easier for windows users to configure

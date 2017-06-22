@@ -38,7 +38,13 @@ All general settings can be changed in `config.json`, e.g.
     "http_user_password": "123", // user password
     "http_port" : "12347", // http port where the service is running
     "rating_template" : "slider1.tpl", // template that will be used , e.g. change it to "radio1.tpl"
-    "voiceRecognition_template" : "radio_voice-recognition.tpl" // template for voice recognition
+    "playlist"  : "playlist.list",  //  Playlist file that will be used (Define your playlist here)
+    "template_folder" : "templates",    //  Folder with your custom templates (Take a look in "/templates/")
+    "training"  :  true,    //  Training stage up front? (true/false)
+    "trainingsplaylist" :   "training.list",    //  if training is true, this trainingsplaylist will be presented
+    "voiceRecognition"  :   false,  // rating using voice recognition? (a little buggy...)
+    "voiceRecognition_template" : "radio_voice-recognition.tpl" // template that will be used for voice recognition
+    "shuffle": true // Randomized playback of videos in playlist? (true: Randomization, false: linear playback according to playlist)
 }
 
 ```
@@ -63,30 +69,20 @@ The playlist `playlist.list` consist just of lines with corresponding video file
 ./videos/01.mkv
 ./videos/02.mkv
 ```
-you can also define a training playlist `training.list` all filenames can also be configured via command line interface of avrateNG.
+you can also define a training playlist `training.list`.
+The playlists to render are defined in the `config.json` file. Also set trainig to true or false in there.
 
 ### Advanced command line flags
 just run `avrateNG.py -h` and you will get the following screen:
 ```
-usage: avrateNG.py [-h] [-configfilename CONFIGFILENAME] [-playlist PLAYLIST]
-                    [--standalone] [-trainingsplaylist TRAININGSPLAYLIST]
-                    [-shuffle] [-voiceRecognition]
+usage: avrateNG.py [-h] [-configfilename CONFIGFILENAME] [--standalone] 
 
 avrate++
 
 optional arguments:
   -h, --help            show this help message and exit
   -configfilename CONFIGFILENAME
-                        configuration file name (default: config.json)
-  -playlist PLAYLIST    video sequence play list (default: playlist.list)
   --standalone          run as standalone version (default: False)
-  -trainingsplaylist TRAININGSPLAYLIST
-                        playlist for training session. If none is given: No
-                        training (default: )
-  -shuffle              Set, when playlist should be randomized (default:
-                        True)
-  -voiceRecognition     Set, when selection should be made using voice
-                        recognition (default: False)
 
 stg7 2017
 ```

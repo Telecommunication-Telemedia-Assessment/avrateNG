@@ -67,13 +67,13 @@ def welcome(db, config):
         if not request.get_cookie("training_state") == "done": # Cookie that controls if training was already done or is still open
             response.set_cookie("training_state","open",path="/")
             response.set_cookie("training","1",path="/")
-            return template("templates/training_welcome.tpl", title="AvRate++", user_id=user_id)
+            return template(config["template_folder"]+"/training_welcome.tpl", title="AvRate++", user_id=user_id)
         else:
             response.set_cookie("training","0",path="/")
-            return template("templates/welcome.tpl", title="AvRate++", user_id=user_id)
+            return template(config["template_folder"]+"/welcome.tpl", title="AvRate++", user_id=user_id)
     else:
         response.set_cookie("training","0",path="/")
-        return template("templates/welcome.tpl", title="AvRate++", user_id=user_id)
+        return template(config["template_folder"]+"/welcome.tpl", title="AvRate++", user_id=user_id)
 
 
 @route('/rate/<video_index>')  # Rating screen with video_index as variable
@@ -107,31 +107,31 @@ def rate(db, config, video_index):
         session_state = session_state + 1
         response.set_cookie("session_state",str(session_state),path="/")
 
-    return template("templates/rate1.tpl", title="AvRate++", rating_template=config["rating_template"], video_index=video_index, video_count=len(config[playlist]), user_id=user_id)
+    return template(config["template_folder"]+"/rate1.tpl", title="AvRate++", rating_template=config["rating_template"], video_index=video_index, video_count=len(config[playlist]), user_id=user_id)
 
 
 @route('/about') # About section
 @auth_basic(check_credentials)
-def about():
-    return template("templates/about.tpl", title="AvRate++")
+def about(config):
+    return template(config["template_folder"]+"/about.tpl", title="AvRate++")
 
 
 @route('/info') # User Info screen
 @auth_basic(check_credentials)
-def info():
-    return template("templates/demographicInfo.tpl", title="AvRate++")
+def info(config):
+    return template(config["template_folder"]+"/demographicInfo.tpl", title="AvRate++")
 
 
 @route('/finish') # Finish screen
 @auth_basic(check_credentials)
-def info():
-    return template("templates/finish.tpl", title="AvRate++")
+def info(config):
+    return template(config["template_folder"]+"/finish.tpl", title="AvRate++")
 
 
 
 @route('/statistics')
 @auth_basic(check_credentials)
-def statistics(db):
+def statistics(db,config):
 
     # Get Data and video names for ratings and transform to JSON objects (better handling)
     db_data=db.execute("SELECT video_name,rating,rating_type from ratings").fetchall()
@@ -144,7 +144,7 @@ def statistics(db):
         rating_dict.setdefault(rating_types[idx], {}).setdefault(video, []).append(rating_data[idx])
 
     # return dictionary as JSON as interface to Java script (see statistics.tpl file for further info)
-    return template("templates/statistics.tpl", title="AvRate++", rating_dict=json.dumps(rating_dict))
+    return template(config["template_folder"]+"/statistics.tpl", title="AvRate++", rating_dict=json.dumps(rating_dict))
 
 
 def store_rating_key_value_pair(db, config, user_id, timestamp, video_index, key, value, tracker, training=False):
@@ -236,10 +236,10 @@ def saveDemographics(db, config):  # save user information (user_id is key in ta
 
 @route('/static/<filename:path>',name='static')  # access the stylesheets and static files (JS files,...)
 @auth_basic(check_credentials)
-def server_static(filename):
+def server_static(filename,config):
     # needed for routing the static files (CSS)
     this_dir_path = os.path.dirname(os.path.abspath(__file__))
-    return static_file(filename, root=this_dir_path + '/templates/static')
+    return static_file(filename, root=this_dir_path + '/'+ config["template_folder"]  +'/static')
 
 
 def server(config, host="127.0.0.1"):
@@ -254,10 +254,7 @@ def server(config, host="127.0.0.1"):
 def main(params=[]):
     parser = argparse.ArgumentParser(description='avrate++', epilog="stg7 2017", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-configfilename', type=str, default="config.json", help='configuration file name')
-    parser.add_argument('-playlist', type=str, default="playlist.list", help='video sequence play list')
     parser.add_argument('--standalone', action='store_true', help="run as standalone version")
-    parser.add_argument('-trainingsplaylist', type=str, default="", help='playlist for training session. If none is given: No training')
-    parser.add_argument('-voiceRecognition', action='store_true', help='set, when selection should be made using voice recognition')
 
     argsdict = vars(parser.parse_args())
     lInfo("read config {}".format(argsdict["configfilename"]))
@@ -268,8 +265,8 @@ def main(params=[]):
         lError("configuration file 'config.json' is corrupt (not json conform). Error: " + str(e))
         return 1
 
-    lInfo("read playlist {}".format(argsdict["playlist"]))
-    with open(argsdict["playlist"]) as playlistfile:
+    lInfo("read playlist {}".format(config["playlist"]))
+    with open(config["playlist"]) as playlistfile:
         playlist = [os.path.join(*x.strip().split("/")) for x in playlistfile.readlines() if x.strip() != ""]
         config["playlist"] = playlist  # add cleaned playlist to config
         # check if each video exists
@@ -279,9 +276,10 @@ def main(params=[]):
                 return -1
 
 
-    if argsdict["trainingsplaylist"]:
-        lInfo("read playlist for Training stage {}".format(argsdict["trainingsplaylist"]))
-        with open(argsdict["trainingsplaylist"]) as trainingsplaylistfile:
+
+    if config["training"]:
+        lInfo("Training stage with trainingsplaylist {}".format(config["trainingsplaylist"]))
+        with open(config["trainingsplaylist"]) as trainingsplaylistfile:
             trainingsplaylist = [os.path.join(*x.strip().split("/")) for x in trainingsplaylistfile.readlines() if x.strip() != ""]
             config["trainingsplaylist"] = trainingsplaylist  # add cleaned playlist to config
             # check if each video exists
@@ -293,8 +291,7 @@ def main(params=[]):
         config["trainingsplaylist"] = "" # empty string when no training is set
 
 
-
-    if argsdict["voiceRecognition"]:
+    if config["voiceRecognition"]:
         # change the rating template to the (radio-) one including voice recognition
         lInfo("Voice recognition active: Automatically loading radio-button template '{}'".format(config["voiceRecognition_template"]))
         config["rating_template"] = config["voiceRecognition_template"]
