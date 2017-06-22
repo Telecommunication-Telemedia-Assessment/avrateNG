@@ -7,10 +7,10 @@
         data_obj={} //bring data to appropriate structure for plotting
 
         for (var video_name in data_as_json) {
-           data_obj[video_name]={y: data_as_json[video_name], name: video_name, type: 'box'};     
-            console.log(data_obj)   
+           data_obj[video_name]={y: data_as_json[video_name], name: video_name, type: 'box'};
+            console.log(data_obj)
           }
-      
+
         var plot_data = [] //create array to plot the data
         for (var item in data_obj) {
           plot_data.push(data_obj[item]);
@@ -19,14 +19,14 @@
       }
     </script>
   </head>
-   
+
 
   <body>
     <!--Div that will hold the chart-->
     <div id="slider_boxplot">
-      <script> 
+      <script>
         var json_data = {{ !rating_dict }}; // get json Data from server
-  
+
         var layout_slider = { //set layout
           title: 'Boxplot showing slider ratings depending on video',
           yaxis: {
@@ -37,10 +37,10 @@
           };
         var plot_data = get_plot_data(json_data['slider'])
         Plotly.newPlot("slider_boxplot", plot_data, layout_slider); //plot the data
-    </script> </div> 
+    </script> </div>
     <br>
     <div id="radio_boxplot">
-      <script> 
+      <script>
         var json_data = {{ !rating_dict }}; // get json Data from server
 
         var layout_radio = { //set layout
@@ -57,13 +57,6 @@
     </div>
 
 
-    
-
-    
-
-
-    
-    
 
   </body>
 

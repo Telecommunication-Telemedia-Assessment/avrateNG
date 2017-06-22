@@ -1,5 +1,5 @@
 <!-- this template defines the progress bar on top of the AVrate pages.
-The JS part dynamically changes the value and width of the bar according to 
+The JS part dynamically changes the value and width of the bar according to
 total number of videos in playlist and current video_index-->
 
 

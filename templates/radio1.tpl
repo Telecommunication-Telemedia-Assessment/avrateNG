@@ -1,4 +1,4 @@
-<!-- this template defines a radio button form. 
+<!-- this template defines a radio button form.
 When creating custom forms copy this basic structure.
 Don't change the form attributes "action" and "method"-->
 

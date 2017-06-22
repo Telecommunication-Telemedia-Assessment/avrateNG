@@ -1,3 +1,4 @@
 ratings.db
 ratings.csv
 __pycache__
+libs/__pycache__

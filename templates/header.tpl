@@ -14,7 +14,7 @@
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
 
-<link rel="stylesheet" href="/static/avrate.css"> 
+<link rel="stylesheet" href="/static/avrate.css">
 <link rel="stylesheet" href="/static/bootstrap-range-input.min.css">
 
 <!-- prevent user from refreshing the page -->

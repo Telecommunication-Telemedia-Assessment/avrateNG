@@ -67,13 +67,13 @@ def welcome(db, config):
         if not request.get_cookie("training_state") == "done": # Cookie that controls if training was already done or is still open
             response.set_cookie("training_state","open",path="/")
             response.set_cookie("training","1",path="/")
-            return template(config["template_folder"]+"/training_welcome.tpl", title="AvRate++", user_id=user_id)
+            return template(config["template_folder"]+"/training_welcome.tpl", title="AvRateNG", user_id=user_id)
         else:
             response.set_cookie("training","0",path="/")
-            return template(config["template_folder"]+"/welcome.tpl", title="AvRate++", user_id=user_id)
+            return template(config["template_folder"]+"/welcome.tpl", title="AvRateNG", user_id=user_id)
     else:
         response.set_cookie("training","0",path="/")
-        return template(config["template_folder"]+"/welcome.tpl", title="AvRate++", user_id=user_id)
+        return template(config["template_folder"]+"/welcome.tpl", title="AvRateNG", user_id=user_id)
 
 
 @route('/rate/<video_index>')  # Rating screen with video_index as variable
@@ -107,25 +107,25 @@ def rate(db, config, video_index):
         session_state = session_state + 1
         response.set_cookie("session_state",str(session_state),path="/")
 
-    return template(config["template_folder"]+"/rate1.tpl", title="AvRate++", rating_template=config["rating_template"], video_index=video_index, video_count=len(config[playlist]), user_id=user_id)
+    return template(config["template_folder"]+"/rate1.tpl", title="AvRateNG", rating_template=config["rating_template"], video_index=video_index, video_count=len(config[playlist]), user_id=user_id)
 
 
 @route('/about') # About section
 @auth_basic(check_credentials)
 def about(config):
-    return template(config["template_folder"]+"/about.tpl", title="AvRate++")
+    return template(config["template_folder"]+"/about.tpl", title="AvRateNG")
 
 
 @route('/info') # User Info screen
 @auth_basic(check_credentials)
 def info(config):
-    return template(config["template_folder"]+"/demographicInfo.tpl", title="AvRate++")
+    return template(config["template_folder"]+"/demographicInfo.tpl", title="AvRateNG")
 
 
 @route('/finish') # Finish screen
 @auth_basic(check_credentials)
 def info(config):
-    return template(config["template_folder"]+"/finish.tpl", title="AvRate++")
+    return template(config["template_folder"]+"/finish.tpl", title="AvRateNG")
 
 
 
@@ -144,7 +144,7 @@ def statistics(db,config):
         rating_dict.setdefault(rating_types[idx], {}).setdefault(video, []).append(rating_data[idx])
 
     # return dictionary as JSON as interface to Java script (see statistics.tpl file for further info)
-    return template(config["template_folder"]+"/statistics.tpl", title="AvRate++", rating_dict=json.dumps(rating_dict))
+    return template(config["template_folder"]+"/statistics.tpl", title="AvRateNG", rating_dict=json.dumps(rating_dict))
 
 
 def store_rating_key_value_pair(db, config, user_id, timestamp, video_index, key, value, tracker, training=False):
@@ -252,7 +252,7 @@ def server(config, host="127.0.0.1"):
 
 
 def main(params=[]):
-    parser = argparse.ArgumentParser(description='avrate++', epilog="stg7 2017", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser = argparse.ArgumentParser(description='avrateNG', epilog="stg7 2017", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-configfilename', type=str, default="config.json", help='configuration file name')
     parser.add_argument('--standalone', action='store_true', help="run as standalone version")
 

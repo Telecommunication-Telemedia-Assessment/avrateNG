@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
+  <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="author" content="Max" >
-  <head>
     <title>{{title}}</title>
     % include('templates/header.tpl')
   </head>
@@ -12,7 +12,7 @@
   <body>
     <div id="playback"></div>
     <div class="jumbotron" id="jumbotron">
-      <h1>Welcome to AVRate++</h1>
+      <h1>Welcome to AVRateNG</h1>
       <p class="lead">You will now be asked for your rating, alright?</p>
       <!-- if you don't want to have the demographics survey, just replace href="/info" with href="/rate/0"
       -->
