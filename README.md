@@ -13,6 +13,9 @@ For windows you can use the provided python3 distribution and setup files in `th
 
 Furthermore you also need a player, e.g. for linux (ubuntu) you can use `mpv` (install it via `sudo apt-get install mpv`), for windows you can use the version that is stored in `thirdparty`
 
+## Plotscript
+For the `generate_plots.py` script you need pandas and seaborn `sudo pip3 install pandas seaborn`.
+
 First Steps
 -----------
 Before you should start with your specific processed video files, you should try to run avrateNG.
@@ -75,7 +78,7 @@ The playlists to render are defined in the `config.json` file. Also set trainig 
 ### Advanced command line flags
 just run `avrateNG.py -h` and you will get the following screen:
 ```
-usage: avrateNG.py [-h] [-configfilename CONFIGFILENAME] [--standalone] 
+usage: avrateNG.py [-h] [-configfilename CONFIGFILENAME] [--standalone]
 
 avrate++
 

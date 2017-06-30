@@ -9,7 +9,7 @@
     "template_folder" : "templates",
     "training"  :  true,
     "trainingsplaylist" :   "training.list",
-    "rating_template" : "rating_and_explanations_form1.tpl",
+    "rating_template" : "multi_slider1.tpl",
     "voiceRecognition"  :   false,
     "voiceRecognition_template" : "radio_voice-recognition.tpl",
     "shuffle": true
