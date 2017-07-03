@@ -10,7 +10,7 @@ Don't change the form attributes "action" and "method"-->
 
       <div class="row">
         <div style="text-align:center" >
-          <output id="slider_value_X"><h3>Quality (Qualität) value: 50 value: 50value: 50 value: 50 </h3></output>
+          <output id="slider_value_X"><h3>Quality (Qualität) value: 50 </h3></output>
         </div>
       </div>
 
