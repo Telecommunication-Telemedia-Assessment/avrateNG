@@ -64,18 +64,17 @@ def welcome(db, config):
     if config["shuffle"]:
         config["shuffled_playlist"] = random.sample(config["playlist"],len(config["playlist"]))
 
-
     # check if training stage is wished and/or training has already finished:
     if config["trainingsplaylist"]: # check if training switch is toggled
         if not request.get_cookie("training_state") == "done": # Cookie that controls if training was already done or is still open
-            response.set_cookie("training_state","open",path="/")
-            response.set_cookie("training","1",path="/")
+            response.set_cookie("training_state","open", path="/")
+            response.set_cookie("training", "1", path="/")
             return template(config["template_folder"] + "/training_welcome.tpl", title="AvRateNG", user_id=user_id)
         else:
-            response.set_cookie("training","0",path="/")
+            response.set_cookie("training", "0", path="/")
             return template(config["template_folder"] + "/welcome.tpl", title="AvRateNG", user_id=user_id)
     else:
-        response.set_cookie("training","0",path="/")
+        response.set_cookie("training","0", path="/")
         return template(config["template_folder"] + "/welcome.tpl", title="AvRateNG", user_id=user_id)
 
 
@@ -111,9 +110,6 @@ def rate(db, config, video_index):
         response.set_cookie("session_state", str(session_state), path="/")
 
     return template(config["template_folder"] + "/rate1.tpl", title="AvRateNG", rating_template=config["rating_template"], video_index=video_index, video_count=len(config[playlist]), user_id=user_id)
-
-
-
 
 
 
@@ -209,21 +205,24 @@ def saveRating(db, config):  # save rating for watched video
         for item in request.forms:
             request_data_pairs[item] = request.forms.get(item)
     else:
-        lError("The submitted rating form submitted key/value pairs.")
+        lError("The submitted rating form does not contain any key/value pairs.")
 
 
     training = int(request.get_cookie("training"))
     for key, value in request_data_pairs.items():
         playlist = store_rating_key_value_pair(db, config, user_id, timestamp, video_index, key, value, tracker, training)
 
+    lInfo("selected playlist: {}".format(playlist))
     # check if this was the last video in playlist
     video_index = int(video_index) + 1
     if video_index > len(config[playlist]) - 1:  # playlist over
-        if int(request.get_cookie("training")):
-            response.set_cookie("training_state","done")
+        if training == 1:
+            lInfo("training done")
+            response.set_cookie("training_state", "done", path="/")
             redirect('/')
         else:
-            response.set_cookie("training_state","open")
+            lInfo("training not over")
+            response.set_cookie("training_state", "open", path="/")
             redirect('/feedback')
     else:
         redirect('/rate/' + str(video_index))  # next video
@@ -256,6 +255,14 @@ def server(config, host="127.0.0.1"):
     lInfo("server starting.")
     run(host=host, port=config["http_port"], debug=True, reloader=True)
     lInfo("server stopped.")
+
+
+@route('/reset_cookies')
+@auth_basic(check_credentials)
+def reset_cookies(db, config):
+    for cookie in request.cookies:
+        response.set_cookie(cookie, '', expires=0)
+
 
 
 def main(params=[]):
