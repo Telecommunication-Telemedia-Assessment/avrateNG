@@ -30,6 +30,8 @@ from bottle import static_file
 from bottle_sqlite import SQLitePlugin
 from bottle_config import ConfigPlugin
 
+from post_rating import *
+
 
 def check_credentials(username, password):
     config = ConfigPlugin._config
@@ -109,6 +111,10 @@ def rate(db, config, video_index):
         response.set_cookie("session_state", str(session_state), path="/")
 
     return template(config["template_folder"] + "/rate1.tpl", title="AvRateNG", rating_template=config["rating_template"], video_index=video_index, video_count=len(config[playlist]), user_id=user_id)
+
+
+
+
 
 
 @route('/about') # About section
@@ -218,7 +224,7 @@ def saveRating(db, config):  # save rating for watched video
             redirect('/')
         else:
             response.set_cookie("training_state","open")
-            redirect('/finish')
+            redirect('/feedback')
     else:
         redirect('/rate/' + str(video_index))  # next video
 
