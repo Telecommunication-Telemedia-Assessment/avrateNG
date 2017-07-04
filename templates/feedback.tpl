@@ -54,7 +54,6 @@ When creating custom forms copy this basic structure.
 Don't change the form attributes "action" and "method"-->
 
     <script>
-
         function sliderChange(val, slider_headline_id, slider_name) {
             //document.getElementById(slider_headline_id).innerHTML = "<h5>" + val + "</h5>";
             //document.getElementById("submitButton").disabled = false;
@@ -138,14 +137,26 @@ Don't change the form attributes "action" and "method"-->
     <!-- End of a slider -->
 
 
-    <h3>How sure were you about the rating that you provided?</script></h3>
+    <h3>Other questions</script></h3>
+
+    <div class="funkyradio funkyradio-compact">
+      <div class="funkyradio-success">
+        <input type="checkbox" name="4k_content_seen" id="4k_content_seen"/>
+        <label for="4k_screen_seen"><h4>Have you seen 4K content before?</h4></label>
+      </div>
+
+      <div class="funkyradio-success">
+        <input type="checkbox" name="4k_screen_seen" id="4k_screen_seen"/>
+        <label for="4k_screen_seen"><h4>Have you seen content on a 4k screen before?</h4></label>
+      </div>
+    </div>
 
     <!-- Beginning of a slider -->
 
     <div class="row">
       <h3>
         <div class="col-lg-4 col-lg-offset-4">
-          <h4>Confidence</h4>
+          <h4>How sure were you about the rating that you provided?</h4>
         </div>
       </h3>
     </div>
@@ -162,6 +173,9 @@ Don't change the form attributes "action" and "method"-->
     </div>
     <br><br>
     <!-- End of a slider -->
+
+
+
 
 
     <!--This input field contains the mouse tracking data and needs to be declared inside the submit form -->
