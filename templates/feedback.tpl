@@ -65,7 +65,9 @@ Don't change the form attributes "action" and "method"-->
   <form action="/save_feedback" method="post">
 
     <h2>The end...</h2>
-    <h4  style="text-align: left; padding-left: 1em;">The test is getting to the end, please answer a few last questions about the rating that you provided</h4>
+
+    <h4  style="text-align: left; padding-left: 1em; width: 25em; text-align: justify;"> The test is getting to the end, please answer a few last questions about the rating that you provided </h4>
+
     <br>
 
     <h3>Please tell us how much these phenomens played a role in your rating:</script></h3>

@@ -223,7 +223,11 @@ def saveRating(db, config):  # save rating for watched video
         else:
             lInfo("training not over")
             response.set_cookie("training_state", "open", path="/")
-            redirect('/feedback')
+
+            if config['display_feedback_form']:
+                redirect('/feedback')
+            else:
+                redirect('/finish')
     else:
         redirect('/rate/' + str(video_index))  # next video
 
