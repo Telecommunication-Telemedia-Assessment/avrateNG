@@ -142,7 +142,7 @@ Don't change the form attributes "action" and "method"-->
     <div class="funkyradio funkyradio-compact">
       <div class="funkyradio-success">
         <input type="checkbox" name="4k_content_seen" id="4k_content_seen"/>
-        <label for="4k_screen_seen"><h4>Have you seen 4K content before?</h4></label>
+        <label for="4k_content_seen"><h4>Have you seen 4K content before?</h4></label>
       </div>
 
       <div class="funkyradio-success">

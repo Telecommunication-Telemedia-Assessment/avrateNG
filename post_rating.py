@@ -33,7 +33,7 @@ def saveFeedback(db, config):  # save user information (user_id is key in tables
     user_id = int(request.get_cookie("user_id"))
 
     db.execute('CREATE TABLE IF NOT EXISTS feedback (user_ID, feedback_json TEXT);')
-    db.execute('INSERT INTO info VALUES (?,?);', (user_id, json.dumps(dict(request.forms))))
+    db.execute('INSERT INTO feedback VALUES (?,?);', (user_id, json.dumps(dict(request.forms))))
     db.commit()
 
     redirect('/finish')
