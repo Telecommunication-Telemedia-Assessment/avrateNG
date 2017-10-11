@@ -122,12 +122,13 @@ def about(config):
 @route('/info') # User Info screen
 @auth_basic(check_credentials)
 def info(config):
+    if not config.get("demographics_form", True):
+        return redirect('/rate/0')
     return template(config["template_folder"] + "/demographicInfo.tpl", title="AvRateNG")
-
 
 @route('/finish') # Finish screen
 @auth_basic(check_credentials)
-def info(config):
+def finish(config):
     return template(config["template_folder"] + "/finish.tpl", title="AvRateNG")
 
 
