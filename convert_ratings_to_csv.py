@@ -34,7 +34,7 @@ def main(params=[]):
         csv.write(";".join(schema) + "\n")
         for row in connection.execute("""select {} from ratings; """.format(",".join(schema))):
             csv_values = [str(row[i]) for i in range(len(row))]
-            csv.write(";".join(csv_values) + "\n")
+            csv.write(",".join(csv_values) + "\n")
 
     connection.commit()
     lInfo("done.")

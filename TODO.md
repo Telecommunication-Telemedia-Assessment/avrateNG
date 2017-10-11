@@ -5,6 +5,7 @@ TODOS
     * reuse pierres ruby hackish
 * integrate different rating models/approaches, e.g. MUSHRA,  DCR, SUMWIK, ACR (done)
     * some generalize which method will be used
+* FIX Filename/path problems
 
 skipped
 -------
