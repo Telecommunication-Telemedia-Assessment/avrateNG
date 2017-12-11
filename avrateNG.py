@@ -41,8 +41,16 @@ def check_credentials(username, password):
 
 
 def play(config, video_index, playlist):
-    video = config[playlist][video_index]
+    def q(x):
+        return "\"" + x + "\""
+    video = q(config[playlist][video_index])
     lInfo("play {}".format(video))
+
+    if "gray_video" in config:
+        video = q(config["gray_video"]) + " " + video + " " + q(config["gray_video"])
+        lInfo("use gray video before and after: {}".format(video))
+    lInfo("player command")
+    print(config["player"].format(filename=video))
     shell_call(config["player"].format(filename=video))
 
 

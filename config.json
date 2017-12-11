@@ -1,7 +1,7 @@
 {
-    "player": "thirdparty\\mpv-x86_64-20161225\\mpv.exe --fs \"{filename}\"",
-    "player_linux": "mpv '{filename}'",
-    "player_linux_": "mpv --fs '{filename}'",
+    "player": "thirdparty\\mpv-x86_64-20161225\\mpv.exe --fs {filename}",
+    "player_linux": "mpv --fs {filename}",
+    "player_linux_": "mpv --fs {filename}",
     "http_user_name": "max",
     "http_user_password": "123",
     "http_port" : "12347",
@@ -14,5 +14,6 @@
     "voiceRecognition_template" : "radio_voice-recognition.tpl",
     "shuffle": true,
     "display_feedback_form": false,
-    "demographics_form": true
+    "demographics_form": true,
+    "gray_video": "videos/gray.mkv"
 }
