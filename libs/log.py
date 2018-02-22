@@ -10,6 +10,7 @@
 """
 import json
 import pprint
+from tkinter import messagebox
 
 
 def colorred(m):
@@ -34,6 +35,7 @@ def lInfo(msg):
 
 def lError(msg):
     print(colorred("[ERROR] ") + str(msg))
+    messagebox.showerror("Error", msg)
 
 
 def lDbg(msg):
