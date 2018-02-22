@@ -9,23 +9,23 @@ Don't change the form attributes "action" and "method"-->
       <div class="funkyradio">
         <div class="funkyradio-success">
           <input type="radio" name="radio" id="radio5" value="5"/>
-          <label for="radio5"><h4>Excellent</h4></label>
+          <label for="radio5"><h4>5 - Excellent</h4></label>
         </div>
         <div class="funkyradio-success">
           <input type="radio" name="radio" id="radio4" value="4"/>
-          <label for="radio4"><h4>Good</h4></label>
+          <label for="radio4"><h4>4 - Good</h4></label>
         </div>
         <div class="funkyradio-success">
           <input type="radio" name="radio" id="radio3" value="3"/>
-          <label for="radio3"><h4>Fair</h4></label>
+          <label for="radio3"><h4>3 - Fair</h4></label>
         </div>
         <div class="funkyradio-success">
           <input type="radio" name="radio" id="radio2" value="2"/>
-          <label for="radio2"><h4>Poor</h4></label>
+          <label for="radio2"><h4>2 - Poor</h4></label>
         </div>
         <div class="funkyradio-success">
-          <input type="radio" name="radio" id="radio1" value="1"/>
-          <label for="radio1"><h4>Very poor</h4></label>
+          <input type="radio" name="radio" id="radio1" value="1"/ >
+          <label for="radio1"><h4>1 - Very poor</h4></label>
         </div>
       </div>
     </div>
