@@ -61,7 +61,7 @@ Please try use command line flags and no manually configured gui settings, so th
 #### Player experiences
 
 * mpv: some problems with 4k content and 60 fps, and vp9
-    * command line arguments: -cache 8388608 -fs --cursor-autohide=0 --osc=no --no-input-default-bindings --hwdec=auto   
+    * command line arguments: -cache 8388608 -fs --cursor-autohide=0 --osc=no --no-input-default-bindings --hwdec=auto
 * media player classic: problems with 4k, 60fps and vp9
 * ffplay: slower than mpv for 4k
 * vlc: slowes player ever
@@ -120,3 +120,11 @@ in `old` you can find some ideas and sketches of a possible avrateNG (the old av
 ### openTasks
 
 * collect features of avrate and summarize them
+
+
+# optiplay command
+* !! check on windows
+* following is the command for the avrateNG config file:
+```bash
+thirdparty\OptiPlay-0.7beta1.exe -an -f v210 -video_size 3840x2160 -framerate 60 -i {filename}
+```
