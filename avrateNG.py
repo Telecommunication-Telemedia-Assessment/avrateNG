@@ -197,7 +197,7 @@ def store_rating_key_value_pair(db, config, user_id, timestamp, video_index, key
 def saveRating(db, config):  # save rating for watched video
 
     video_index = request.query.video_index  # extract current video_index from query
-    timestamp = str(datetime.datetime.fromtimestamp(int(time.time())).strftime('%Y-%m-%d %H:%M:%S'))  # define timestamp
+    timestamp = str(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S %f'))  # define timestamp
     user_id = int(request.get_cookie("user_id"))
 
     # Get Mousetracker and write to DB
