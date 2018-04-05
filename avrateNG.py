@@ -43,7 +43,8 @@ def check_credentials(username, password):
 def play(config, video_index, playlist):
     def q(x):
         return "\"" + x + "\""
-    video = q(config[playlist][video_index])
+    video = " ".join(map(q, config[playlist][video_index]))
+
     lInfo("play {}".format(video))
 
     if "gray_video" in config:
@@ -99,7 +100,7 @@ def rate(db, config, video_index):
         playlist = "trainingsplaylist"
     else:
         if config["shuffle"]:
-            playlist="shuffled_playlist"
+            playlist = "shuffled_playlist"
         else:
             playlist = "playlist"
 
@@ -120,31 +121,29 @@ def rate(db, config, video_index):
     return template(config["template_folder"] + "/rate1.tpl", title="AvRateNG", rating_template=config["rating_template"], video_index=video_index, video_count=len(config[playlist]), user_id=user_id)
 
 
-
-@route('/about') # About section
+@route('/about')  # About section
 @auth_basic(check_credentials)
 def about(config):
     return template(config["template_folder"] + "/about.tpl", title="AvRateNG")
 
 
-@route('/info') # User Info screen
+@route('/info')  # User Info screen
 @auth_basic(check_credentials)
 def info(config):
     if not config.get("demographics_form", True):
         return redirect('/rate/0')
     return template(config["template_folder"] + "/demographicInfo.tpl", title="AvRateNG")
 
-@route('/finish') # Finish screen
+
+@route('/finish')  # Finish screen
 @auth_basic(check_credentials)
 def finish(config):
     return template(config["template_folder"] + "/finish.tpl", title="AvRateNG")
 
 
-
 @route('/statistics')
 @auth_basic(check_credentials)
-def statistics(db,config):
-
+def statistics(db, config):
     # Get Data and video names for ratings and transform to JSON objects (better handling)
     db_data=db.execute("SELECT video_name,rating,rating_type from ratings").fetchall()
     video_names = [row[0] for row in db_data]
@@ -152,7 +151,7 @@ def statistics(db,config):
     rating_types = [row[2] for row in db_data]
     # extract all kinds of ratings from DB and convert to one dictionary
     rating_dict = {}
-    for idx,video in enumerate(video_names):
+    for idx, video in enumerate(video_names):
         rating_dict.setdefault(rating_types[idx], {}).setdefault(video, []).append(rating_data[idx])
 
     # return dictionary as JSON as interface to Java script (see statistics.tpl file for further info)
@@ -160,7 +159,6 @@ def statistics(db,config):
 
 
 def store_rating_key_value_pair(db, config, user_id, timestamp, video_index, key, value, tracker, training=False):
-
     # Choose DB table to store the ratings
     if not training:
 
@@ -170,7 +168,13 @@ def store_rating_key_value_pair(db, config, user_id, timestamp, video_index, key
         else:
             playlist = "playlist"
         video_name = config[playlist][int(video_index)]
-
+        # for supporting multiple files per playlist entry, here needs to be done some extension
+        if len(video_name) == 0:
+            # old style of storing, one video name per rating
+            video_name = video_name[0]
+        else:
+            # complex video name, e.g. two videos
+            video_name = str(video_name)
 
         # Store rating to DB
         db.execute('CREATE TABLE IF NOT EXISTS ratings (user_ID INTEGER, video_ID TEXT, video_name TEXT, rating_type TEXT, rating TEXT, timestamp TEXT);')
@@ -192,10 +196,10 @@ def store_rating_key_value_pair(db, config, user_id, timestamp, video_index, key
 
     return playlist
 
+
 @route('/save_rating', method='POST')
 @auth_basic(check_credentials)
 def saveRating(db, config):  # save rating for watched video
-
     video_index = request.query.video_index  # extract current video_index from query
     timestamp = str(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S %f'))  # define timestamp
     user_id = int(request.get_cookie("user_id"))
@@ -207,7 +211,6 @@ def saveRating(db, config):  # save rating for watched video
     else:
         tracker = "No tracking data submitted."
 
-
     # Get POST Data ratings and write to DB
     if len(request.forms.keys()) >= 1:
         request_data_pairs = {}
@@ -215,7 +218,6 @@ def saveRating(db, config):  # save rating for watched video
             request_data_pairs[item] = request.forms.get(item)
     else:
         lError("The submitted rating form does not contain any key/value pairs.")
-
 
     training = int(request.get_cookie("training"))
     for key, value in request_data_pairs.items():
@@ -277,6 +279,26 @@ def reset_cookies(db, config):
         response.set_cookie(cookie, '', expires=0)
 
 
+def get_and_check_playlist(playlistfilename):
+    with open(playlistfilename) as playlistfile:
+        playlist = []
+        for line in playlistfile:
+            if line.strip() == "":
+                continue
+            normalized_video_path = os.path.join(*line.strip().split("/"))
+            # check if each video exists
+            if " | " in normalized_video_path:
+                lInfo("specified multiple videos per playlist entry")
+            videos = normalized_video_path.split(" | ")
+            for video in videos:
+                if not os.path.isfile(video):
+                    lError("'{}' is not a valid videofile, please check your playlistfile".format(normalized_video_path))
+                    sys.exit(-1)
+            playlist.append(videos)
+        print("\n".join(map(str, playlist)))
+        return playlist
+    return -1
+
 
 def main(params=[]):
     parser = argparse.ArgumentParser(description='avrateNG', epilog="stg7 2017", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -293,27 +315,11 @@ def main(params=[]):
         return 1
 
     lInfo("read playlist {}".format(config["playlist"]))
-    with open(config["playlist"]) as playlistfile:
-        playlist = [os.path.join(*x.strip().split("/")) for x in playlistfile.readlines() if x.strip() != ""]
-        config["playlist"] = playlist  # add cleaned playlist to config
-        # check if each video exists
-        for video in playlist:
-            if not os.path.isfile(video):
-                lError("'{}' is not a valid videofile, please check your playlistfile".format(video))
-                return -1
 
-
+    config["playlist"] = get_and_check_playlist(config["playlist"])
 
     if config["training"]:
-        lInfo("Training stage with trainingsplaylist {}".format(config["trainingsplaylist"]))
-        with open(config["trainingsplaylist"]) as trainingsplaylistfile:
-            trainingsplaylist = [os.path.join(*x.strip().split("/")) for x in trainingsplaylistfile.readlines() if x.strip() != ""]
-            config["trainingsplaylist"] = trainingsplaylist  # add cleaned playlist to config
-            # check if each video exists
-            for video in trainingsplaylist:
-                if not os.path.isfile(video):
-                    lError("'{}' is not a valid videofile, please check your playlistfile".format(video))
-                    return -1
+        config["trainingsplaylist"] = get_and_check_playlist(config["trainingsplaylist"])
     else:
         config["trainingsplaylist"] = "" # empty string when no training is set
 

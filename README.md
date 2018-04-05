@@ -76,6 +76,20 @@ The playlist `playlist.list` consist just of lines with corresponding video file
 you can also define a training playlist `training.list`.
 The playlists to render are defined in the `config.json` file. Also set trainig to true or false in there.
 
+#### multiple videos per line
+You can specify multiple videos in one playlist entry if you separate them by ` | ` (spaces are important).
+```
+./videos/01.mkv | ./videos/01.mkv
+./videos/02.mkv
+```
+
+The configured player will now get as `{filename} = "./videos/01.mkv" "./videos/01.mkv"`
+
+#### gray video
+A 2 second gray video will be played before and after a video, for disabling
+just remove `"gray_video": "..."` in your config file.
+
+
 ### Advanced command line flags
 just run `avrateNG.py -h` and you will get the following screen:
 ```
