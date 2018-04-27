@@ -344,7 +344,8 @@ def main(params=[]):
         lInfo("Voice recognition active: Automatically loading radio-button template '{}'".format(config["voiceRecognition_template"]))
         config["rating_template"] = config["voiceRecognition_template"]
 
-    if system().lower() in ["linux", "darwin"]:
+    if any(system().lower().startswith(i) for i in ["linux", "darwin"]):
+        lInfo("Detected *nix-like system; using Linux player command")
         config["player"] = config["player_linux"]  # override player command for linux or macOS
 
     if argsdict["standalone"]:
