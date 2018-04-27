@@ -1,8 +1,9 @@
-avrateNG
-========
+# avrateNG
+avrateNG is a video/image/.. rating system, heavily based on (AVrate)[https://github.com/Telecommunication-Telemedia-Assessment/AVRate].
+avrateNG is developed as part of research in the (AVT Group)[https://www.tu-ilmenau.de/en/audio-visual-technology/].
 
-Requirements
-------------
+
+# Requirements
 The only software you need to install is python3 for windows or linux,
 for linux you can install it via
 ```
@@ -14,22 +15,19 @@ For windows you can use the provided python3 distribution and setup files in `th
 Furthermore you also need a player, e.g. for linux (ubuntu) you can use `mpv` (install it via `sudo apt-get install mpv`), for windows you can use the version that is stored in `thirdparty`
 
 ## Plotscript
-For the `generate_plots.py` script you need pandas and seaborn `sudo pip3 install pandas seaborn`.
+For the `generate_plots.py` script you need pandas and seaborn `sudo pip3 install pandas seaborn`. `generate_plots.py` is **experimental**.
 
-First Steps
------------
+## First Steps
 Before you should start with your specific processed video files, you should try to run avrateNG.
 If you correctly checkout the repository, everything should work.
 So just start `avrateNG.py` and open http://0.0.0.0:12347/ in your favorite webbrowser.
-(default user/password is max, and 123).
+(default user/password is `max`, and `123`, change it in the `config.json`).
 
-All ratings are stored in a sqlite3 database, for a simple conversion you can use `convert_ratings_to_csv.py` this script will create a csv file of all stored ratings.
-
-
+All ratings are stored in a sqlite3 database, for a simple conversion you can use `convert_ratings_to_csv.py` this script will create a `csv` file of all stored ratings.
 
 
-Configuration
--------------
+
+## Configuration
 
 ### General settings
 All general settings can be changed in `config.json`, e.g.
@@ -40,7 +38,7 @@ All general settings can be changed in `config.json`, e.g.
     "http_user_name": "max",  // user login name
     "http_user_password": "123", // user password
     "http_port" : "12347", // http port where the service is running
-    "rating_template" : "slider1.tpl", // template that will be used , e.g. change it to "radio1.tpl"
+    "rating_template" : "radio1.tpl", // template that will be used , e.g. change it to "radio1.tpl"
     "playlist"  : "playlist.list",  //  Playlist file that will be used (Define your playlist here)
     "template_folder" : "templates",    //  Folder with your custom templates (Take a look in "/templates/")
     "training"  :  true,    //  Training stage up front? (true/false)
@@ -55,7 +53,7 @@ All general settings can be changed in `config.json`, e.g.
 ### Player setup
 
 You just need to change the `player` or `player_linux` value in the `config.json`
-to your favorite video player, e.g. it also works with media player classic, vlc or ffplay.
+to your favorite video player corresponding to your operating system, e.g. it also works with media player classic, vlc or ffplay.
 Please try use command line flags and no manually configured gui settings, so that your experiment can be run without spending hours in configuration of the player.
 
 #### Player experiences
@@ -64,7 +62,11 @@ Please try use command line flags and no manually configured gui settings, so th
     * command line arguments: -cache 8388608 -fs --cursor-autohide=0 --osc=no --no-input-default-bindings --hwdec=auto
 * media player classic: problems with 4k, 60fps and vp9
 * ffplay: slower than mpv for 4k
-* vlc: slowes player ever
+* vlc: slowest player ever (not yet tested with version 3.0)
+* following is the command for optiplay in the avrateNG config file:
+```bash
+thirdparty\OptiPlay-0.7beta1.exe -an -f v210 -video_size 3840x2160 -framerate 60 -i {filename}
+```
 
 ### Playlist creation
 
@@ -102,43 +104,21 @@ optional arguments:
   -configfilename CONFIGFILENAME
   --standalone          run as standalone version (default: False)
 
-stg7 2017
+stg7 2018
 ```
 
 
 ### Templates
 
-TODO(stg7)
-
-Development Notes
------------------
-
-Development of a stable and new version of avrate, based on HTTP server technology.
-
-Requirements:
-
-* platform independent (not only windows)
-* possible to use external "rating" device (via webpage rating)
-* python3
-* mpv
-
-### Ideas
-
-* use python3, bottle and html5 (bootstrap) skeleton
+There are several rating templates implemented, they can be changed in the `config.json`.
+Default template is a classic ACR rating scheme.
 
 
-### Structure
-in `old` you can find some ideas and sketches of a possible avrateNG (the old avrate and minirate)
+### Developers
+* Steve Göring
+* Maximilian Schaab
+* Serge Molina
+* Anton Schubert
 
+### License
 
-### openTasks
-
-* collect features of avrate and summarize them
-
-
-# optiplay command
-* !! check on windows
-* following is the command for the avrateNG config file:
-```bash
-thirdparty\OptiPlay-0.7beta1.exe -an -f v210 -video_size 3840x2160 -framerate 60 -i {filename}
-```
