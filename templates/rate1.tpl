@@ -32,7 +32,7 @@ video_index needs to be given as input -->
       % include('templates/progressBar.tpl', video_index=video_index, video_count=video_count)
 
       <div class="row">
-        <h3 style="float: left; width: 34%; text-align: left;">Please rate the watched video</h3>
+        <h3 style="float: left; width: 44%; text-align: left;">What is your opinion of the video quality?</h3>
         <h3 style="float: right; width: 34%; text-align: right;">User ID: {{user_id}}</h3>
         <br><br><br><br><br><br>
       </div>
