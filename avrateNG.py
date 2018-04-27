@@ -23,7 +23,7 @@ import webbrowser
 import time
 import datetime
 import random
-from sys import platform
+from platform import system
 
 # load libs from lib directory
 import loader
@@ -344,9 +344,8 @@ def main(params=[]):
         lInfo("Voice recognition active: Automatically loading radio-button template '{}'".format(config["voiceRecognition_template"]))
         config["rating_template"] = config["voiceRecognition_template"]
 
-
-    if platform == "linux" or platform == "linux2":
-        config["player"] = config["player_linux"]  # override player command for linux
+    if system().lower() in ["linux", "darwin"]:
+        config["player"] = config["player_linux"]  # override player command for linux or macOS
 
     if argsdict["standalone"]:
         # run server in separate thread

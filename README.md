@@ -4,15 +4,14 @@ avrateNG is developed as part of research in the [AVT Group](https://www.tu-ilme
 
 
 # Requirements
-The only software you need to install is Python 3 for Windows or Linux,
-for Linux you can install it via
-```
-sudo apt-get install python3
-```
 
-For Windows you can use the provided Python 3 distribution and setup files in `thirdparty` folder.
+* Operating system: Windows, Linux or macOS
+* Python 3
+    - Windows: you can use the provided Python 3 distribution and setup files in `thirdparty` folder
+    - Linux: `sudo apt-get install python3`
+    - macOS: Use [Homebrew](https://brew.sh/) and run `brew install python`
 
-Furthermore you also need a player, e.g. for Linux (ubuntu) you can use `mpv` (install it via `sudo apt-get install mpv`), for Windows you can use the version that is stored in `thirdparty`.
+Furthermore you also need a player, e.g. for Linux (Ubuntu) or macOS you can use `mpv` (install it via `sudo apt-get install mpv` or `brew install mpv`); for Windows you can use the version that is stored in `thirdparty`.
 
 ## Plotscript
 For the `generate_plots.py` script you need pandas and seaborn `sudo pip3 install pandas seaborn`. `generate_plots.py` is **experimental**.
