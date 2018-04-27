@@ -301,7 +301,7 @@ def get_and_check_playlist(playlistfilename):
 
 
 def main(params=[]):
-    parser = argparse.ArgumentParser(description='avrateNG', epilog="stg7 2017", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser = argparse.ArgumentParser(description='avrateNG', epilog="stg7 2018", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('-configfilename', type=str, default="config.json", help='configuration file name')
     parser.add_argument('--standalone', action='store_true', help="run as standalone version")
 
