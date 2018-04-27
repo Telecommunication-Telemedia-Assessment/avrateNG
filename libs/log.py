@@ -10,23 +10,29 @@
 """
 import json
 import pprint
+from sys import platform
+
 from tkinter import messagebox
 
 
-def colorred(m):
-    return "\033[91m" + m + "\033[0m"
-
-
-def colorblue(m):
-    return "\033[94m" + m + "\033[0m"
-
-
-def colorgreen(m):
-    return "\033[92m" + m + "\033[0m"
-
-
-def colorcyan(m):
-    return "\033[96m" + m + "\033[0m"
+if platform == "linux" or platform == "linux2":
+    def colorred(m):
+        return "\033[91m" + m + "\033[0m"
+    def colorblue(m):
+        return "\033[94m" + m + "\033[0m"
+    def colorgreen(m):
+        return "\033[92m" + m + "\033[0m"
+    def colorcyan(m):
+        return "\033[96m" + m + "\033[0m"
+else:  # no colored messages for windows
+    def colorred(m):
+        return m
+    def colorblue(m):
+        return m
+    def colorgreen(m):
+        return m
+    def colorcyan(m):
+        return m
 
 
 def lInfo(msg):
