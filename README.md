@@ -20,7 +20,7 @@ For the `generate_plots.py` script you need pandas and seaborn `sudo pip3 instal
 ## First Steps
 Before you should start with your specific processed video files, you should try to run avrateNG.
 If you correctly checkout the repository, everything should work.
-So just start `avrateNG.py` and open http://0.0.0.0:12347/ in your favorite webbrowser.
+So just start `avrateNG.py` and open http://127.0.0.1:12347/ in your favorite webbrowser.
 (default user/password is `max`, and `123`, change it in the `config.json`).
 
 All ratings are stored in a sqlite3 database, for a simple conversion you can use `convert_ratings_to_csv.py` this script will create a `csv` file of all stored ratings.
