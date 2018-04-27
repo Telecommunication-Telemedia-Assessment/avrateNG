@@ -1,6 +1,6 @@
 # avrateNG
-avrateNG is a video/image/.. rating system, heavily based on (AVrate)[https://github.com/Telecommunication-Telemedia-Assessment/AVRate].
-avrateNG is developed as part of research in the (AVT Group)[https://www.tu-ilmenau.de/en/audio-visual-technology/].
+avrateNG is a video/image/.. rating system, heavily based on [AVrate](https://github.com/Telecommunication-Telemedia-Assessment/AVRate).
+avrateNG is developed as part of research in the [AVT Group](https://www.tu-ilmenau.de/en/audio-visual-technology/).
 
 
 # Requirements
