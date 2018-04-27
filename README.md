@@ -121,4 +121,4 @@ Default template is a classic ACR rating scheme.
 * Anton Schubert
 
 ### License
-
+see LICENSE file in this repository
