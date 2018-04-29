@@ -18,12 +18,12 @@
 
 import json
 import pprint
-from sys import platform
+from platform import system
 
 from tkinter import messagebox
 
 
-if platform == "linux" or platform == "linux2":
+if any(system().lower().startswith(i) for i in ["linux", "darwin"]):
     def colorred(m):
         return "\033[91m" + m + "\033[0m"
     def colorblue(m):
