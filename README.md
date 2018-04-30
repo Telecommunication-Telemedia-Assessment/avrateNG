@@ -42,7 +42,7 @@ All general settings can be changed in `config.json`, e.g.
 
 ```json
 {
-    "player": "thirdparty\\mpv-x86_64-20161225\\mpv.exe --fs \"{filename}\"", // default Windows player path, \"{filename}\" is a template for the video filename
+    "player": "thirdparty\\mpv-x86_64-20180429-git-dc16d85\\mpv.exe --fs \"{filename}\"", // default Windows player path, \"{filename}\" is a template for the video filename
     "player_linux": "mpv --fs '{filename}'",                                  // Linux player
     "http_user_name": "max",                                                  // user login name
     "http_user_password": "123",                                              // user password
@@ -67,7 +67,7 @@ Please try use command line flags and no manually configured GUI settings, so th
 #### Player experiences
 
 * `mpv`: some problems with 4K content and 60 fps, and vp9
-    * command line arguments: `-cache 8388608 -fs --cursor-autohide=0 --osc=no --no-input-default-bindings --hwdec=auto`
+    * command line arguments: `-cache 8388608 -fs --cursor-autohide=0 --osc=no --no-input-default-bindings --hwdec=auto --ontop`
 * Media Player Classic: problems with 4K, 60fps and vp9
 * ffplay: slower than mpv for 4K
 * VLC: slowest player ever (not yet tested with version 3.0)
