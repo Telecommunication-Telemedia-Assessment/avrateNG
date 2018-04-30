@@ -1,7 +1,10 @@
 # AvrateNG for windows -- some notes
 
 For windows, install the python 3.6.5. distribution, select custom install, and *important* select the "add python to environment path" box.
+
+
 see ![boxes](python_install_settings.png)
+
 
 Path changes will only be valid after a reboot
 
