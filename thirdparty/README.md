@@ -14,8 +14,8 @@ open `cmd.exe` and type `python` + enter, and you should get a valid python3 she
 
 # first run
 * open `cmd.exe` go to avrateNG folder,
-* run python avrateNG.py
-* a firewall window should appear, add avrateNG to a local network exception
+* run `python avrateNG.py`
+* a firewall window should appear, allow avrateNG to access network.
 
 # general
 
