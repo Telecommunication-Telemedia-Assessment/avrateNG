@@ -20,7 +20,7 @@ For the `generate_plots.py` script you need pandas and seaborn `sudo pip3 instal
 
 Before you should start with your specific processed video files, you should try to run avrateNG. If you correctly checkout the repository, everything should work.
 
-Just start `avrateNG.py` and open http://127.0.0.1:12347/ in your favorite webbrowser:
+Just start `avrateNG.py` and open http://127.0.0.1:12347/ (prefered browser is Chrome/Chromium, it should work also with Firefox and Edge) in your favorite webbrowser:
 
 ```
 ./avrateNG.py
