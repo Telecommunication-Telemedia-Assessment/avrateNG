@@ -1,8 +1,8 @@
 @echo off
 
-echo avrateng windows start script
+echo avrateNG windows start script
 
-title avrateng windows start script
+title avrateNG windows start script
 
-python avrateng.py
+python avrateNG.py
 
