@@ -1,5 +1,5 @@
 {
-    "player": "thirdparty\\mpv-x86_64-20180429-git-dc16d85\\mpv.exe --ontop --fs {filename}",
+    "player": "thirdparty\\mpv-x86_64-20180429-git-dc16d85\\mpv.exe  --cursor-autohide=0 --osc=no --no-input-default-bindings --hwdec=auto --ontop --fs {filename}",
     "player_linux": "mpv --fs --ontop {filename}",
     "http_user_name": "max",
     "http_user_password": "123",
