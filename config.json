@@ -6,7 +6,7 @@
     "http_port" : "12347",
     "playlist"  : "playlist.list",
     "template_folder" : "templates",
-    "training"  :  false,
+    "training"  :  true,
     "trainingsplaylist" :   "training.list",
     "rating_template" : "radio1.tpl",
     "voiceRecognition"  :   false,

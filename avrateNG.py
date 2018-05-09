@@ -174,14 +174,7 @@ def statistics(db, config):
 
 
 def store_rating_key_value_pair(db, config, user_id, timestamp, video_index, key, value, tracker, training=False):
-    # Choose DB table to store the ratings
-    if not training:
-
-        # Lookup the correct playlist
-        if config["shuffle"]:
-            playlist = "shuffled_playlist"
-        else:
-            playlist = "playlist"
+    def get_video_name(playlist, video_index, config):
         video_name = config[playlist][int(video_index)]
         # for supporting multiple files per playlist entry, here needs to be done some extension
         if len(video_name) == 0:
@@ -190,6 +183,17 @@ def store_rating_key_value_pair(db, config, user_id, timestamp, video_index, key
         else:
             # complex video name, e.g. two videos
             video_name = str(video_name)
+        return video_name
+
+    # Choose DB table to store the ratings
+    if not training:
+
+        # Lookup the correct playlist
+        if config["shuffle"]:
+            playlist = "shuffled_playlist"
+        else:
+            playlist = "playlist"
+        video_name = get_video_name(playlist, video_index, config)
 
         # Store rating to DB
         db.execute('CREATE TABLE IF NOT EXISTS ratings (user_ID INTEGER, video_ID TEXT, video_name TEXT, rating_type TEXT, rating TEXT, timestamp TEXT);')
@@ -203,8 +207,7 @@ def store_rating_key_value_pair(db, config, user_id, timestamp, video_index, key
 
     else:
         playlist = "trainingsplaylist"
-
-        video_name = config[playlist][int(video_index)]
+        video_name = get_video_name(playlist, video_index, config)
         db.execute('CREATE TABLE IF NOT EXISTS training (user_ID INTEGER, video_ID TEXT, video_name TEXT, rating_type TEXT, rating TEXT, timestamp TEXT);')
         db.execute('INSERT INTO training VALUES (?,?,?,?,?,?);',(user_id, video_index, video_name, key, value, timestamp))
         db.commit()
