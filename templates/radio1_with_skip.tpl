@@ -27,6 +27,10 @@ Don't change the form attributes "action" and "method"-->
           <input type="radio" name="radio" id="radio1" value="1"/ >
           <label for="radio1"><h4>1 - Bad</h4></label>
         </div>
+        <div class="funkyradio-success">
+          <input type="radio" name="radio" id="radioS" value="-1"/ >
+          <label for="radioS"><h4>skip</h4></label>
+        </div>
       </div>
     </div>
 
