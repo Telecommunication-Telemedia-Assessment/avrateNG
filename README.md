@@ -1,9 +1,9 @@
 # avrateNG
 ![animation](doc/animation.gif)
 
-avrateNG is a video/image/.. rating system, heavily based on [AVrate](https://github.com/Telecommunication-Telemedia-Assessment/AVRate).
-avrateNG is developed as part of research in the [AVT Group](https://www.tu-ilmenau.de/en/audio-visual-technology/).
+avrateNG is a video, image, and general multimedia rating system, based on a simple web interface. avrateNG is developed as part of research in the [AVT Group](https://www.tu-ilmenau.de/en/audio-visual-technology/).
 
+avrateNG was inspired by [AVrate](https://github.com/Telecommunication-Telemedia-Assessment/AVRate).
 
 # Requirements
 
@@ -15,14 +15,18 @@ avrateNG is developed as part of research in the [AVT Group](https://www.tu-ilme
 
 Furthermore you also need a player, e.g. for Linux (Ubuntu) or macOS you can use `mpv` (install it via `sudo apt-get install mpv` or `brew install mpv`); for Windows you can use the version that is stored in `thirdparty`.
 
-## Plotscript
-For the `generate_plots.py` script you need pandas and seaborn `sudo pip3 install pandas seaborn`. `generate_plots.py` is **experimental**.
+## Plot script
+For the `generate_plots.py` script you need pandas and seaborn:
 
-## First Steps
+    pip3 install pandas seaborn
+
+Note: `generate_plots.py` is **experimental**.
+
+## First steps
 
 Before you should start with your specific processed video files, you should try to run avrateNG. If you correctly checkout the repository, everything should work.
 
-Just start `avrateNG.py` and open http://127.0.0.1:12347/ (prefered browser is Chrome/Chromium, it should work also with Firefox and Edge) in your favorite webbrowser:
+Just start `avrateNG.py` and open http://127.0.0.1:12347/ (preferred browser is Chrome/Chromium, it should work also with Firefox and Edge) in your favorite web browser:
 
 ```
 ./avrateNG.py
