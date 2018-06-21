@@ -1,5 +1,5 @@
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="/static/jquery.min.js"></script>
+<script src="/static/jquery-3.3.1.slim.min"></script>
 
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="/static/bootstrap.min.css">

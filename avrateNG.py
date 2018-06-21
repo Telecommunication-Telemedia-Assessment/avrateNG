@@ -135,7 +135,7 @@ def rate(db, config, video_index):
         session_state = session_state + 1
         response.set_cookie("session_state", str(session_state), path="/")
 
-    return template(config["template_folder"] + "/rate1.tpl", title="AvRateNG", rating_template=config["rating_template"], video_index=video_index, video_count=len(config[playlist]), user_id=user_id)
+    return template(config["template_folder"] + "/rate1.tpl", title="AvRateNG", rating_template=config["rating_template"], video_index=video_index, video_count=len(config[playlist]), user_id=user_id, question=config.get("question", "add question to config.json"))
 
 
 @route('/about')  # About section

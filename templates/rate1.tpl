@@ -28,23 +28,28 @@ video_index needs to be given as input -->
     <div id="playback"></div>
     <div class="container" id="content">
 
-      <br>
+      <div style="margin-top: 1em;"></div>
       % include('templates/progressBar.tpl', video_index=video_index, video_count=video_count)
 
-      <div class="row">
-        <h3 style="float: left; width: 44%; text-align: left;">What is your opinion of the video quality?</h3>
-        <h3 style="float: right; width: 34%; text-align: right;">User ID: {{user_id}}</h3>
-        <br><br><br><br><br><br>
+      <div class="container" id="content">
+        <div class="row">
+            <div class="col">
+              <h5>{{question}}</h5>
+            </div>
+            <div class="col text-right">
+              <h5>User ID: {{user_id}}</h5>
+            </div>
+        </div>
       </div>
 
-      <div class="row" id="form-template">
+      <!--<div class="row" id="form-template"> -->
         % include('templates/' + rating_template, video_index=video_index)   # replace with slider1.tpl or button1.tpl
       <form method="post" id="tracking_form">
 
       </form>
         <br><br>
 
-      </div>
+      <!--</div> -->
 
       % include('templates/footer.tpl')
 

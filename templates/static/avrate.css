@@ -5,6 +5,8 @@
 .funkyradio div {
   clear: both;
   overflow: hidden;
+  width: 100%;
+  display: block;
 }
 
 /* TODO: change to a cleaner solution for allowing a compact representation of choices? */
@@ -25,12 +27,16 @@ div#playback {
     }
 
 .funkyradio label {
-  width: 100%;
+  width: 100% !important;
   border-radius: 3px;
   border: 1px solid #D1D3D4;
-  font-weight: normal;
-
+  font-weight: normal !important;
   padding-right: 1em;
+  vertical-align: middle;
+}
+h4, h3, h5{
+  font-weight: normal !important;
+  margin-top: .5rem !important;
 }
 
 .funkyradio input[type="radio"]:empty,
@@ -105,21 +111,21 @@ div#playback {
   margin: 20px 0;
   text-align: center;
   background-color:#BAE0FF;
-	}
-	.jumbotron h1 {
+}
+.jumbotron h1 {
   font-size: 72px;
   line-height: 1;
   font-weight: bold;
-	}
-	.jumbotron .btn {
+}
+.jumbotron .btn {
   font-size: 21px;
   padding: 14px 24px;
-	}
+}
 
 .glyphicon-record-right {
-float: right;
-margin-top: 2px;
-margin-right: -6px;
+  float: right;
+  margin-top: 2px;
+  margin-right: -6px;
 }
 
 /*
@@ -127,3 +133,5 @@ body {
   background-color: #000000 !important;
 }
 */
+
+
