@@ -56,6 +56,8 @@ def check_credentials(username, password):
 
 
 def play(config, video_index, playlist):
+    if config.get("no_video_playback", False):
+        return
     def q(x):
         return "\"" + x + "\""
     video = " ".join(map(q, config[playlist][video_index]))
