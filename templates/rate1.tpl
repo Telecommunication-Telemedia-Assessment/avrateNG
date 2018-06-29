@@ -12,6 +12,7 @@
     <script>
         // this script is reponsible for engaging the wait screen during playback
         $(document).ready(function(){
+            console.log("here");
             $("#submitButton").click(function(){
             $("#playback").show();
             $("#content").hide();
@@ -31,7 +32,7 @@ video_index needs to be given as input -->
       <div style="margin-top: 1em;"></div>
       % include('templates/progressBar.tpl', video_index=video_index, video_count=video_count)
 
-      <div class="container" id="content">
+      <div class="container">
         <div class="row">
             <div class="col">
               <h5>{{question}}</h5>
