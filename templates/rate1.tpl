@@ -12,7 +12,6 @@
     <script>
         // this script is reponsible for engaging the wait screen during playback
         $(document).ready(function(){
-            console.log("here");
             $("#submitButton").click(function(){
             $("#playback").show();
             $("#content").hide();
