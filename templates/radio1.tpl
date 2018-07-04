@@ -33,7 +33,7 @@ Don't change the form attributes "action" and "method"-->
     <input type="hidden" id="mouse_track" name="mouse_track" value=""/>
 
     <!--<div class="row"> -->
-      <button id="submitButton" class="btn-lg btn-success btn-block" style="margin-top: 2em;" onclick="log_position()" >Submit and continue</button>
+      <button type="submit" id="submitButton" class="btn-lg btn-success btn-block" style="margin-top: 2em;" onclick="log_position()" disabled>Submit and continue</button>
     <!-- </div> -->
   </form>
 </div>

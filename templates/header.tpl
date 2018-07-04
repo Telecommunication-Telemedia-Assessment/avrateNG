@@ -4,15 +4,12 @@
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="/static/bootstrap.min.css">
 
-<!-- Optional theme -->
-<link rel="stylesheet" href="/static/bootstrap-theme.min.css">
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="/static/bootstrap.min.js"></script>
 
 <!-- chart engine -->
 <script src="/static/plotly-latest.min.js"></script>
-
 
 <link rel="stylesheet" href="/static/avrate.css">
 <link rel="stylesheet" href="/static/bootstrap-range-input.min.css">

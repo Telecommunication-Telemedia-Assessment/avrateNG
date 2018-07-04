@@ -13,8 +13,13 @@
         // this script is reponsible for engaging the wait screen during playback
         $(document).ready(function(){
             $("#submitButton").click(function(){
-            $("#playback").show();
-            $("#content").hide();
+              // Fix issue with html5 validation
+              const form = document.body.querySelector('#form1');
+              if (form.checkValidity && !form.checkValidity()) {
+                  return;
+              }
+              $("#playback").show();
+              $("#content").hide();
             });
         });
     </script>
