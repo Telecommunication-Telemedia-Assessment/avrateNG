@@ -46,7 +46,7 @@ All ratings are stored in a sqlite3 database. For a simple conversion you can us
 ### General settings
 All general settings can be changed in `config.json`, e.g.
 
-```json
+```
 {
     "player": "thirdparty\\mpv-x86_64-20180429-git-dc16d85\\mpv.exe --fs \"{filename}\"", // default Windows player path, \"{filename}\" is a template for the video filename
     "player_linux": "mpv --fs '{filename}'",                                  // Linux player
