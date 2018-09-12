@@ -132,6 +132,9 @@ stg7 2018
 
 There are several rating templates implemented, they can be changed in the `config.json`. Default template is a classic ACR rating scheme.
 
+### Analysis
+For a first check how the output format could be used in a small analysis, check the jupyter notebook in the `analysis` folder
+
 ### Developers
 
 * Steve Göring
