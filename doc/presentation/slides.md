@@ -50,10 +50,12 @@ header-includes:
     - \usepackage{pgf}
     - \logo{\pgfputat{\pgfxy(-0.2,7.3)}{\pgfbox[right,base]{\includegraphics[height=0.7cm]{imgs/logo.pdf}}}}
 ---
+
 # AvrateNG
 
 * software to collect ratings for subjective tests
     * \xG{e.g. ACR ratings}
+    * \xG{open source:} [https://bit.ly/2QlCGft](https://bit.ly/2QlCGft)
 * written in python, client server architecture
     * \xG{ensures flexibility}
     * \xG{rating variants implemented using HTML templates}
@@ -84,8 +86,7 @@ header-includes:
     "shuffle": true,
     "gray_video": "videos/gray.mkv",
     "no_video_playback": false,
-    "question": "What is your opinion of the video quality?",
-    ...
+    "question": "What is your opinion of the video quality?", ...
 }
 ```
 
