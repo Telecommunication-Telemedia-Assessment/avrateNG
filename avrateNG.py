@@ -288,7 +288,13 @@ def server(config, host="127.0.0.1"):
     install(ConfigPlugin(config))
 
     lInfo("server starting.")
-    run(host=host, port=config["http_port"], debug=True, reloader=True)
+    run(
+        host=host,
+        port=config["http_port"],
+        debug=True,
+        reloader=True,
+        fast=True
+    )
     lInfo("server stopped.")
 
 
