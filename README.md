@@ -125,7 +125,7 @@ optional arguments:
   -configfilename CONFIGFILENAME
   --standalone          run as standalone version (default: False)
 
-stg7 2018
+stg7 2019
 ```
 
 ### Templates
@@ -141,6 +141,10 @@ For a first check how the output format could be used in a small analysis, check
 * Maximilian Schaab
 * Serge Molina
 * Anton Schubert
+
+### Contributers
+* demographics form: John Dumke and Margaret Pinson
+
 
 ### Acknowledgements
 
