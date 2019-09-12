@@ -49,6 +49,12 @@ from post_rating import *
 
 
 def check_credentials(username, password):
+    """
+    check user/password to run the test,
+    this is only required if avrateNG is started on a computer in
+    an opem accessible network, because network ports are opened,
+    such an open network configuration should be avoided running a test.
+    """
     config = ConfigPlugin._config
     validName = config["http_user_name"]
     validPassword = config["http_user_password"]
@@ -56,9 +62,14 @@ def check_credentials(username, password):
 
 
 def play(config, video_index, playlist):
+    """
+    play a given video by its index inside the playlist
+    """
     if config.get("no_video_playback", False):
         return
     def q(x):
+        """ quote the video name for command line usage,
+        prevends problems with spaces in video filenames"""
         return "\"" + x + "\""
     video = " ".join(map(q, config[playlist][video_index]))
 
@@ -75,7 +86,9 @@ def play(config, video_index, playlist):
 @route('/')  # Welcome screen
 @auth_basic(check_credentials)
 def welcome(db, config):
-
+    """
+    welcome screen
+    """
     # for every new start ("/"): user_id (cookie) is incremented by 1
     if not db.execute("SELECT * FROM sqlite_master WHERE type='table' AND name='ratings'").fetchone():
         user_id = 1 # if ratings table does not exist: first user_id = 1
@@ -107,7 +120,9 @@ def welcome(db, config):
 @route('/rate/<video_index>')  # Rating screen with video_index as variable
 @auth_basic(check_credentials)
 def rate(db, config, video_index):
-
+    """
+    show rating screen for one specific video
+    """
     video_index = int(video_index)
     user_id = int(request.get_cookie("user_id"))
     session_state = int(request.get_cookie("session_state"))
@@ -141,12 +156,18 @@ def rate(db, config, video_index):
 @route('/about')  # About section
 @auth_basic(check_credentials)
 def about(config):
+    """
+    about avrateNG
+    """
     return template(config["template_folder"] + "/about.tpl", title="AvRateNG")
 
 
 @route('/info')  # User Info screen
 @auth_basic(check_credentials)
 def info(config):
+    """
+    show demographics_form if required
+    """
     if not config.get("demographics_form", True):
         return redirect('/rate/0')
     return template(config["template_folder"] + "/demographicInfo.tpl", title="AvRateNG")
@@ -155,12 +176,18 @@ def info(config):
 @route('/finish')  # Finish screen
 @auth_basic(check_credentials)
 def finish(config):
+    """
+    will be shown after test was completly done
+    """
     return template(config["template_folder"] + "/finish.tpl", title="AvRateNG")
 
 
 @route('/statistics')
 @auth_basic(check_credentials)
 def statistics(db, config):
+    """
+    TODO: was planned to show some test statistics, can be either removed or re-checked
+    """
     # Get Data and video names for ratings and transform to JSON objects (better handling)
     db_data=db.execute("SELECT video_name,rating,rating_type from ratings").fetchall()
     video_names = [row[0] for row in db_data]
@@ -176,6 +203,10 @@ def statistics(db, config):
 
 
 def store_rating_key_value_pair(db, config, user_id, timestamp, video_index, key, value, tracker, training=False):
+    """
+    store a given rating as a key value pair inside the sqlite3 table,
+    further also timestamp and played video is stored
+    """
     def get_video_name(playlist, video_index, config):
         video_name = config[playlist][int(video_index)]
         # for supporting multiple files per playlist entry, here needs to be done some extension
@@ -219,7 +250,10 @@ def store_rating_key_value_pair(db, config, user_id, timestamp, video_index, key
 
 @route('/save_rating', method='POST')
 @auth_basic(check_credentials)
-def saveRating(db, config):  # save rating for watched video
+def saveRating(db, config):
+    """
+    save rating for watched video
+    """
     video_index = request.query.video_index  # extract current video_index from query
     timestamp = str(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S %f'))  # define timestamp
     user_id = int(request.get_cookie("user_id"))
@@ -265,7 +299,11 @@ def saveRating(db, config):  # save rating for watched video
 
 @route('/save_demographics', method='POST')
 @auth_basic(check_credentials)
-def saveDemographics(db, config):  # save user information (user_id is key in tables) as JSON string
+def saveDemographics(db, config):
+    """
+    saves demographic info into sqlite3 table,
+    all user information (user_id is key in tables) are stored as JSON string
+    """
     user_id = int(request.get_cookie("user_id"))
 
     db.execute('CREATE TABLE IF NOT EXISTS info (user_ID, info_json TEXT);')
@@ -278,12 +316,17 @@ def saveDemographics(db, config):  # save user information (user_id is key in ta
 @route('/static/<filename:path>',name='static')  # access the stylesheets and static files (JS files,...)
 @auth_basic(check_credentials)
 def server_static(filename,config):
-    # needed for routing the static files (CSS)
+    """
+    needed for routing the static files (CSS)
+    """
     this_dir_path = os.path.dirname(os.path.abspath(__file__))
     return static_file(filename, root=this_dir_path + '/'+ config["template_folder"]  +'/static')
 
 
 def server(config, host="127.0.0.1"):
+    """
+    start the server part of avrateNG
+    """
     install(SQLitePlugin(dbfile='ratings.db'))
     install(ConfigPlugin(config))
 
@@ -301,11 +344,19 @@ def server(config, host="127.0.0.1"):
 @route('/reset_cookies')
 @auth_basic(check_credentials)
 def reset_cookies(db, config):
+    """
+    perfrom a reset of the cookies, this is only for internal usage,
+    in case avrateNG needs to be resetted
+    """
     for cookie in request.cookies:
         response.set_cookie(cookie, '', expires=0)
 
 
 def get_and_check_playlist(playlistfilename):
+    """
+    reads playlist and checks if files are existing,
+    otherwise an error is shown
+    """
     with open(playlistfilename) as playlistfile:
         playlist = []
         for line in playlistfile:
@@ -327,7 +378,11 @@ def get_and_check_playlist(playlistfilename):
 
 
 def main(params=[]):
-    parser = argparse.ArgumentParser(description='avrateNG', epilog="stg7 2018", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser = argparse.ArgumentParser(
+        description='avrateNG',
+        epilog="stg7 2019",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
     parser.add_argument('-configfilename', type=str, default="config.json", help='configuration file name')
     parser.add_argument('--standalone', action='store_true', help="run as standalone version")
 
