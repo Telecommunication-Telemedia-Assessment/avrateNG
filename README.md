@@ -5,6 +5,8 @@ avrateNG is a video, image, and general multimedia rating system, based on a sim
 
 avrateNG was inspired by [AVrate](https://github.com/Telecommunication-Telemedia-Assessment/AVRate).
 
+If you want to implement an online test, please checkout [AVrate Voyager](https://github.com/Telecommunication-Telemedia-Assessment/AVrateVoyager)
+
 # Requirements
 
 * Operating system: Windows, Linux or macOS
