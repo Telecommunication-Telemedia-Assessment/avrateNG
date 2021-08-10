@@ -19,40 +19,41 @@ import sys
 import argparse
 import json
 import sqlite3
+import pandas as pd
 
-# load libs from lib directory
-import loader
-from log import *
-from system import *
+
+def lInfo(x):
+    print(x)
+
+
+def lError(x):
+    print(x)
 
 
 def main(params=[]):
     parser = argparse.ArgumentParser(description='avrate++ convert ratings to csv for better handling', epilog="stg7 2017", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument('--dbfilename', type=str, default="ratings.db", help='filename of database with ratings')
-    parser.add_argument('--cvsfilename', type=str, default="ratings.csv", help='filename of cvs file for exporting')
+    parser.add_argument("--csv_file_prefix", type=str, default="_", help="prefix of csv files")
 
-    argsdict = vars(parser.parse_args())
-    lInfo("convert {} to {}".format(argsdict["dbfilename"], argsdict["cvsfilename"]))
+    a = vars(parser.parse_args())
+    lInfo("convert {}".format(a["dbfilename"]))
 
-    connection = sqlite3.connect(argsdict["dbfilename"])
+    connection = sqlite3.connect(a["dbfilename"])
 
-    if not os.path.isfile(argsdict["dbfilename"]):
+    if not os.path.isfile(a["dbfilename"]):
         lError("your database is not a valid file")
         return
 
-    schema = {}
-    for row in connection.execute("""pragma table_info('ratings') """):
-        schema[row[1]] = ""
-    schema = sorted(schema.keys())
-
-    with open(argsdict["cvsfilename"], "w") as csv:
-        csv.write(",".join(schema) + "\n")
-        for row in connection.execute("""select {} from ratings; """.format(",".join(schema))):
-            csv_values = [str(row[i]) for i in range(len(row))]
-            csv.write(",".join(csv_values) + "\n")
+    for row in connection.execute("SELECT name FROM sqlite_master WHERE type='table';"):
+        table = row[0]
+        csvtable = a["csv_file_prefix"] + table + ".csv"
+        print(f"export table: {table} to {csvtable}")
+        df = pd.read_sql_query(f"SELECT * from {table}", connection)
+        df.to_csv(csvtable, index=False)
 
     connection.commit()
     lInfo("done.")
+
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv[1:]))

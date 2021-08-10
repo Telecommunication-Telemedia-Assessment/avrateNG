@@ -41,7 +41,7 @@ The default credentials are:
 
 Change these in the `config.json` file.
 
-All ratings are stored in a sqlite3 database. For a simple conversion you can use `convert_ratings_to_csv.py`. This script will create a `csv` file of all stored ratings.
+All ratings are stored in a sqlite3 database. For a simple conversion you can use `convert_ratings_to_csv.py`. This script will create a `csv` file of all stored ratings and other data. It requires pandas to be installed.
 
 ## Configuration
 
