@@ -17,7 +17,7 @@
 import os
 import sys
 import argparse
-import pandas as pd  # requires panda installation
+import pandas as pd  # requires pandas installation
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
