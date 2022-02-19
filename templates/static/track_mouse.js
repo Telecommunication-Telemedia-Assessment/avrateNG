@@ -10,7 +10,7 @@ document.onmousemove = function(e){
     cursorX = e.pageX;
     cursorY = e.pageY;
 }
-setInterval(checkCursor, time);
+//setInterval(checkCursor, time);  // deactiate tracking
 function checkCursor(){
     position.posX.push(cursorX);
     position.posY.push(cursorY);

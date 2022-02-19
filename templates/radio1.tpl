@@ -30,7 +30,10 @@ Don't change the form attributes "action" and "method"-->
       </div>
 
     <!--This input field contains the mouse tracking data and needs to be declared inside the submit form -->
+    <!--
+    deactivated
     <input type="hidden" id="mouse_track" name="mouse_track" value=""/>
+    -->
 
     <!--<div class="row"> -->
       <button type="submit" id="submitButton" class="btn-lg btn-success btn-block" style="margin-top: 2em;" onclick="log_position()" disabled>Submit and continue</button>

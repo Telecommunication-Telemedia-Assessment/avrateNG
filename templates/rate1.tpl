@@ -7,9 +7,11 @@
   <meta name="author" content="Max" >
     <title>{{title}}</title>
     % include('templates/header.tpl')
-    <!-- track mouse positions -->
+    <!-- deactivated track mouse positions
     <script src="/static/track_mouse.js"></script>
+    -->
     <script>
+        function log_position() { }
         // this script is reponsible for engaging the wait screen during playback
         $(document).ready(function(){
             $("#submitButton").click(function(){
