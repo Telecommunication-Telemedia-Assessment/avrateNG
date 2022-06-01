@@ -334,9 +334,9 @@ def server(config, host="127.0.0.1"):
     run(
         host=host,
         port=config["http_port"],
-        debug=True,
-        reloader=True,
-        fast=True
+        debug=False,
+        reloader=False,
+        fast=False
     )
     lInfo("server stopped.")
 
