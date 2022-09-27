@@ -150,8 +150,18 @@ For a first check how the output format could be used in a small analysis, check
 
 ### Acknowledgements
 
-If you use this software in your research, please include a link to the repository.
+If you use this software in your research, please include a link to the repository and cite the following paper:
 
+```
+@inproceedings{goering2021voyager,
+  title={AVRate Voyager: an open source online testing platform},
+  author={Steve Göring and Rakesh {Rao Ramachandra Rao} and Stephan Fremerey and Alexander Raake},
+  year={2021},
+  booktitle={2021 IEEE 23st International Workshop on Multimedia Signal Processing (MMSP)},
+  pages={1--6},
+  organization={IEEE}
+}
+```
 ### License
 
 GNU General Public License v3. See LICENSE file in this repository.
