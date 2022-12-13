@@ -18,6 +18,14 @@ Don't change the form attributes "action" and "method"-->
       </div>
     </div>
 
+    <div class="row">
+      <h3>
+      <div class="col-lg-12 col-lg-offset-12">
+        <output id="slider_value"><h3>Rating: 4 </script></h3></output>
+      </div>
+      </h3>
+    </div>
+
     <br><br>
 
     <!--This input field contains the mouse tracking data and needs to be declared inside the submit form -->
@@ -37,7 +45,7 @@ Don't change the form attributes "action" and "method"-->
 <script>
 
     function sliderChange(val) {
-        document.getElementById("slider_value").innerHTML="<h3>Current slider value: "+val+"</h3>";
+        document.getElementById("slider_value").innerHTML="<h3>Rating: "+val+"</h3>";
         document.getElementById("submitButton").disabled = false;
     }
 </script>
