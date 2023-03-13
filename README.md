@@ -152,7 +152,7 @@ For a first check how the output format could be used in a small analysis, check
 
 If you use this software in your research, please include a link to the repository and cite the following paper:
 
-```
+```bibtex
 @inproceedings{goering2021voyager,
   title={AVRate Voyager: an open source online testing platform},
   author={Steve Göring and Rakesh {Rao Ramachandra Rao} and Stephan Fremerey and Alexander Raake},
@@ -164,4 +164,4 @@ If you use this software in your research, please include a link to the reposito
 ```
 ### License
 
-GNU General Public License v3. See LICENSE file in this repository.
+GNU General Public License v3. See (LICENSE.md)[LICENSE] file in this repository.
