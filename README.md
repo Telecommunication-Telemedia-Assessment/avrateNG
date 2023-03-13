@@ -150,7 +150,7 @@ For a first check how the output format could be used in a small analysis, check
 
 ### Acknowledgements
 
-If you use this software in your research, please include a link to the repository and cite the following paper:
+If you use this software in your research, please include a link to the repository and cite the following paper and the repository:
 
 ```bibtex
 @inproceedings{goering2021voyager,
@@ -160,6 +160,11 @@ If you use this software in your research, please include a link to the reposito
   booktitle={2021 IEEE 23st International Workshop on Multimedia Signal Processing (MMSP)},
   pages={1--6},
   organization={IEEE}
+}
+@online{AVRateNG,
+  author    = {AVRateNG},
+  title     = {AVRateNG -- github project},
+  url     = {https://github.com/Telecommunication-Telemedia-Assessment/avrateNG},
 }
 ```
 ### License
