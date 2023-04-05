@@ -134,6 +134,9 @@ stg7 2019
 
 There are several rating templates implemented, they can be changed in the `config.json`. Default template is a classic ACR rating scheme.
 
+### Color Scheme
+To change the color scheme to one with gray background, replace `tempaltes/static/avrate.css` with `tempaltes/static/avrate_gray.css`.
+
 ### Analysis
 For a first check how the output format could be used in a small analysis, check the jupyter notebook in the `analysis` folder
 
