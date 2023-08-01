@@ -61,12 +61,27 @@ def check_credentials(username, password):
     return password == validPassword and username == validName
 
 
-def play(config, video_index, playlist):
+@route("/play/<video_index>")
+@auth_basic(check_credentials)
+def play_async(db, config, video_index):
     """
     play a given video by its index inside the playlist
     """
+    video_index = int(video_index)
+    print("play_async", video_index)
+
+    if int(request.get_cookie("training")):
+        playlist = "trainingsplaylist"
+    else:
+        if config["shuffle"]:
+            playlist = "shuffled_playlist"
+        else:
+            playlist = "playlist"
+
     if config.get("no_video_playback", False):
         return
+    print(playlist)
+
     def q(x):
         """ quote the video name for command line usage,
         prevends problems with spaces in video filenames"""
@@ -74,7 +89,6 @@ def play(config, video_index, playlist):
     video = " ".join(map(q, config[playlist][video_index]))
 
     lInfo("play {}".format(video))
-
     if "gray_video" in config:
         video = q(config["gray_video"]) + " " + video + " " + q(config["gray_video"])
         lInfo("use gray video before and after: {}".format(video))
@@ -144,7 +158,7 @@ def rate(db, config, video_index):
 
     # play video only on first visit
     if play_video == 1:
-        play(config, video_index, playlist)
+        # play(config, video_index, playlist)  # the play call (via the play route) is moved to the rating template
         # play just one time
         play_video = 0
         session_state = session_state + 1

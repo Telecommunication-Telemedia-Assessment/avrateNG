@@ -25,6 +25,31 @@
             });
         });
     </script>
+    <script type="text/javascript">
+
+      function get_request(url) {
+        const Http = new XMLHttpRequest();
+        Http.open("GET", url);
+        Http.send();
+
+        Http.onreadystatechange = (e) => {
+          console.log(Http.responseText)
+        }
+      }
+
+      function play(video_index) {
+        console.log("play: video_index:" + video_index);
+        get_request("/play/" + video_index);
+        setTimeout(
+          ()=> {
+            document.getElementById("content").style.display = "block";
+          },
+          1000  // 1 second delay to show the main rating form
+        );
+      }
+
+      play("{{video_index}}");
+    </script>
   </head>
 
 <!-- Basic template for the rating procedure. For different rating forms insert
@@ -33,7 +58,7 @@ video_index needs to be given as input -->
 
   <body>
     <div id="playback"></div>
-    <div class="container" id="content">
+    <div class="container" id="content" style="display:none">
 
       <div style="margin-top: 1em;"></div>
       % include('templates/progressBar.tpl', video_index=video_index, video_count=video_count)
