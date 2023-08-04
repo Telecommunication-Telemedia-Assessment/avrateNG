@@ -343,15 +343,24 @@ def server(config, host="127.0.0.1"):
     """
     install(SQLitePlugin(dbfile='ratings.db'))
     install(ConfigPlugin(config))
-
-    lInfo("server starting.")
-    run(
-        host=host,
-        port=config["http_port"],
-        debug=False,
-        reloader=False,
-        fast=False
-    )
+    dev = config["development"]
+    lInfo("server starting. devmode: " + str(dev))
+    if dev:
+        run(
+            host=host,
+            port=config["http_port"],
+            debug=True,
+            reloader=True,
+            fast=True
+        )
+    else:
+        run(
+            host=host,
+            port=config["http_port"],
+            debug=False,
+            reloader=False,
+            fast=False
+        )
     lInfo("server stopped.")
 
 
@@ -399,6 +408,7 @@ def main(params=[]):
     )
     parser.add_argument('-configfilename', type=str, default="config.json", help='configuration file name')
     parser.add_argument('--standalone', action='store_true', help="run as standalone version")
+    parser.add_argument('--development', '-d', action='store_true', help="run in dev mode")
 
     argsdict = vars(parser.parse_args())
     lInfo("read config {}".format(argsdict["configfilename"]))
@@ -408,7 +418,7 @@ def main(params=[]):
     except Exception as e:
         lError("configuration file 'config.json' is corrupt (not json conform). Error: " + str(e))
         return 1
-
+    config["development"] = argsdict["development"]
     lInfo("read playlist {}".format(config["playlist"]))
 
     config["playlist"] = get_and_check_playlist(config["playlist"])
