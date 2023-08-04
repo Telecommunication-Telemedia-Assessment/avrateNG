@@ -63,7 +63,7 @@ def check_credentials(username, password):
 @auth_basic(check_credentials)
 def play(db, config, stimuli_idx):
     """
-    play a given video by its index inside the playlist
+    play a given media file by its index inside the playlist
     """
     stimuli_idx = int(stimuli_idx)
     print("play", stimuli_idx)
@@ -232,15 +232,6 @@ def rate(db, config, stimuli_idx):
         question=config.get("question", "add question to config.json"),
         dev=request.get_cookie("dev") == "1"
     )
-
-
-@route('/about')  # About section
-@auth_basic(check_credentials)
-def about(config):
-    """
-    about AVRateNG
-    """
-    return template(config["template_folder"] + "/about.tpl", title="AVRateNG")
 
 
 @route('/questionnaire')
