@@ -95,6 +95,10 @@ def play(db, config, stimuli_idx):
 
 
 def get_user_id_playlist(db, config):
+    if request.get_cookie("user_id"):
+        user_id = int(request.get_cookie("user_id"))
+        playlist = json.loads(db.execute('SELECT playlist from user_playlist where user_ID==? ;', (user_id,)).fetchone()[0])
+        return user_id, playlist
     """ read user id from database """
     if not db.execute("SELECT * FROM sqlite_master WHERE type='table' AND name='ratings'").fetchone():
         user_id = 1 # if ratings table does not exist: first user_id = 1
