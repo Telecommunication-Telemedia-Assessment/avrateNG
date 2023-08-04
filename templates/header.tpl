@@ -1,20 +1,23 @@
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="/static/jquery-3.3.1.slim.min.js"></script>
+<header>
+  <!-- Fixed navbar -->
+  <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">AVRateNG</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav ms-auto">
+            % if user_id != "":
+            <li class="nav-item">
+                <span class="nav-link">ID: {{user_id}}</span>
+            </li>
 
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="/static/bootstrap.min.css">
+            % end
 
+        </ul>
 
-<!-- Latest compiled and minified JavaScript -->
-<script src="/static/bootstrap.min.js"></script>
-
-<!-- chart engine -->
-<script src="/static/plotly-latest.min.js"></script>
-
-<link rel="stylesheet" href="/static/avrate.css">
-<link rel="stylesheet" href="/static/bootstrap-range-input.min.css">
-
-<!-- prevent user from refreshing the page -->
-<script src="/static/noback.js"></script>
-
-
+      </div>
+    </div>
+  </nav>
+</header>

@@ -147,10 +147,11 @@ def welcome(db, config):
 
 @route('/start_test')
 def start_test(config, db):
-    check_if_test_was_done_already(request, config)
+    response.set_cookie("training", "0", path="/")
+    response.set_cookie("training_state", "done", path="/")
     return template(
         config["template_folder"] + "/start_test.tpl",
-        title=config["title"]
+        title="AVRateNG"
     )
 
 
@@ -158,26 +159,26 @@ def start_test(config, db):
 @route('/training/<stimuli_idx>', method="POST")
 def training(config, db, stimuli_idx):
 
-    check_if_test_was_done_already(request, config)
     user_id = int(request.get_cookie("user_id"))
     stimuli_idx = int(stimuli_idx)
 
-    if len(config["training"]) == 0:
+    if len(config["trainingsplaylist"]) == 0:
         redirect('/rate/0')
         return
-    if stimuli_idx >= len(config["training"]):
+    if stimuli_idx >= len(config["trainingsplaylist"]):
         redirect('/start_test')
         return
     return bottle.template(
         config["template_folder"] + "/rate.tpl",
-        title=config["title"],
+        title="AVRateNG",
         train=True,
         rating_template=config["rating_template"],
         stimuli_done=stimuli_idx,
         stimuli_idx=stimuli_idx,
-        stimuli_file=config["training"][stimuli_idx],
-        stimuli_count=len(config["training"]),
+        stimuli_file=config["trainingsplaylist"][stimuli_idx],
+        stimuli_count=len(config["trainingsplaylist"]),
         user_id=user_id,
+        question=config.get("question", "add question to config.json"),
         dev=request.get_cookie("dev") == "1"
     )
 
@@ -245,6 +246,9 @@ def questionnaire(config):
     show questionnaire if required
     """
     if not config.get("questionnaire", True):
+        if int(request.get_cookie("training")) > 0:
+            redirect('/training/0')
+            return
         return redirect('/rate/0')
     return template(
         config["template_folder"] + "/questionnaire.tpl",
@@ -409,7 +413,7 @@ def get_and_check_playlist(playlistfilename):
 def main(params=[]):
     parser = argparse.ArgumentParser(
         description='AVRateNG',
-        epilog="stg7 2019",
+        epilog="stg7 2023",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
     parser.add_argument('-configfilename', type=str, default="config.json", help='configuration file name')

@@ -8,13 +8,10 @@
   "template_folder": "templates",
   "training": true,
   "trainingsplaylist": "training.list",
-  "rating_template": "radio1.tpl",
-  "voiceRecognition": false,
-  "voiceRecognition_template": "radio_voice-recognition.tpl",
+  "rating_template": "rating/acr.tpl",
   "shuffle": true,
-  "display_feedback_form": false,
-  "demographics_form": false,
+  "questionnaire": false,
   "gray_video": "videos/gray.mkv",
-  "no_video_playback": false,
+  "no_media_playback": true,
   "question": "What is your opinion of the video quality?"
 }
