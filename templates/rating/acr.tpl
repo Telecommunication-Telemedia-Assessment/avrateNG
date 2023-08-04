@@ -21,7 +21,7 @@
       % for button in buttons:
 
         <div class="funkyradio-success">
-          <input type="radio" name="radio" id="radio_{{button['value']}}" value="{{button['value']}}" onchange="radiobutton_clicked(this)">
+          <input type="radio" name="acr" id="radio_{{button['value']}}" value="{{button['value']}}" onchange="radiobutton_clicked(this)">
           <label for="radio_{{button['value']}}">{{button['value']}} - {{button['text']}}</label>
         </div>
       % end
@@ -47,10 +47,6 @@
 
     function radiobutton_clicked(rb) {
       radio_button_clicked ++;
-    }
-
-    function display_rating(){
-      document.getElementById("ratingform").style.display="block";
     }
 
     function check_form(event) {
