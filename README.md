@@ -1,9 +1,9 @@
-# avrateNG
+# AVRateNG
 ![animation](doc/animation.gif)
 
-avrateNG is a video, image, and general multimedia rating system, based on a simple web interface. avrateNG is developed as part of the research in the [AVT Group](https://www.tu-ilmenau.de/en/audio-visual-technology/).
+AVRateNG is a video, image, and general multimedia rating system, based on a simple web interface. AVRateNG is developed as part of the research in the [AVT Group](https://www.tu-ilmenau.de/en/audio-visual-technology/).
 
-avrateNG was inspired by [AVrate](https://github.com/Telecommunication-Telemedia-Assessment/AVRate).
+AVRateNG was inspired by [AVrate](https://github.com/Telecommunication-Telemedia-Assessment/AVRate).
 
 If you want to implement an online test, please checkout [AVrate Voyager](https://github.com/Telecommunication-Telemedia-Assessment/AVrateVoyager)
 
@@ -26,7 +26,7 @@ Note: `generate_plots.py` is **experimental**.
 
 ## First steps
 
-Before you should start with your specific processed media files, you should try to run avrateNG. If you correctly checkout the repository, everything should work.
+Before you should start with your specific processed media files, you should try to run AVRateNG. If you correctly checkout the repository, everything should work.
 
 Just start `avrateNG.py` and open http://127.0.0.1:12347/ (preferred browser is Chrome/Chromium, it should work also with Firefox and Edge) in your favorite web browser:
 
