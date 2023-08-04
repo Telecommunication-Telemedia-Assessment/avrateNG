@@ -1,7 +1,7 @@
 # avrateNG
 ![animation](doc/animation.gif)
 
-avrateNG is a video, image, and general multimedia rating system, based on a simple web interface. avrateNG is developed as part of research in the [AVT Group](https://www.tu-ilmenau.de/en/audio-visual-technology/).
+avrateNG is a video, image, and general multimedia rating system, based on a simple web interface. avrateNG is developed as part of the research in the [AVT Group](https://www.tu-ilmenau.de/en/audio-visual-technology/).
 
 avrateNG was inspired by [AVrate](https://github.com/Telecommunication-Telemedia-Assessment/AVRate).
 
@@ -26,7 +26,7 @@ Note: `generate_plots.py` is **experimental**.
 
 ## First steps
 
-Before you should start with your specific processed video files, you should try to run avrateNG. If you correctly checkout the repository, everything should work.
+Before you should start with your specific processed media files, you should try to run avrateNG. If you correctly checkout the repository, everything should work.
 
 Just start `avrateNG.py` and open http://127.0.0.1:12347/ (preferred browser is Chrome/Chromium, it should work also with Firefox and Edge) in your favorite web browser:
 
@@ -60,9 +60,11 @@ All general settings can be changed in `config.json`, e.g.
     "template_folder" : "templates",                                          // Folder with your custom templates (Take a look in "/templates/")
     "training" : true,                                                        //  Training stage up front? (true/false)
     "trainingsplaylist" : "training.list",                                    // if training is true, this trainingsplaylist will be presented
-    "voiceRecognition"  : false,                                              // rating using voice recognition? (a little buggy...)
-    "voiceRecognition_template" : "radio_voice-recognition.tpl",              // template that will be used for voice recognition
     "shuffle": true                                                           // Randomized playback of videos in playlist? (true: Randomization, false: linear playback according to playlist)
+    "questionnaire": true,                                                    // include questionnair
+    "gray_video": "videos/gray.mkv",                                          // show a gray video 
+    "no_media_playback": false,                                               // deactivate media playout
+    "question": "What is your opinion of the video quality?"                  // the question for the rating screen
 }
 ```
 
@@ -119,23 +121,23 @@ Just run `avrateNG.py -h` and you will get the following screen:
 
 ```
 usage: avrateNG.py [-h] [-configfilename CONFIGFILENAME] [--standalone]
+                   [--development]
 
-avrate++
+AVRateNG
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -configfilename CONFIGFILENAME
+                        configuration file name (default: config.json)
   --standalone          run as standalone version (default: False)
+  --development, -d     run in dev mode (default: False)
 
-stg7 2019
+stg7 2023
 ```
 
 ### Templates
 
-There are several rating templates implemented, they can be changed in the `config.json`. Default template is a classic ACR rating scheme.
-
-### Color Scheme
-To change the color scheme to one with gray background, replace `tempaltes/static/avrate.css` with `tempaltes/static/avrate_gray.css`.
+There are several rating templates implemented, they can be changed in the `config.json`. Default template is a classic ACR rating scheme, see e.g. the folder `templates/rating/`.
 
 ### Analysis
 For a first check how the output format could be used in a small analysis, check the jupyter notebook in the `analysis` folder
@@ -143,12 +145,14 @@ For a first check how the output format could be used in a small analysis, check
 ### Developers
 
 * Steve Göring
+* Rakesh Rao Ramachandra Rao
+* Stephan Fremerey
 * Maximilian Schaab
 * Serge Molina
 * Anton Schubert
 
 ### Contributers
-* demographics form: John Dumke and Margaret Pinson
+* questionnair form: John Dumke and Margaret Pinson
 
 
 ### Acknowledgements
