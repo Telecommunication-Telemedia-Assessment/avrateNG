@@ -10,8 +10,8 @@
   "trainingsplaylist": "training.list",
   "rating_template": "rating/acr.tpl",
   "shuffle": true,
-  "questionnaire": false,
+  "questionnaire": true,
   "gray_video": "videos/gray.mkv",
-  "no_media_playback": true,
+  "no_media_playback": false,
   "question": "What is your opinion of the video quality?"
 }
