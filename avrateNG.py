@@ -191,7 +191,7 @@ def training(config, db, stimuli_idx):
 @auth_basic(check_credentials)
 def rate(db, config, stimuli_idx):
     """
-    show rating screen for one specific video
+    show rating screen for one specific stimuli
     """
     stimuli_idx = int(stimuli_idx)
 
