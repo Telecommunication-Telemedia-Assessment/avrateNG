@@ -63,12 +63,12 @@ def check_credentials(username, password):
 
 @route("/play/<video_index>")
 @auth_basic(check_credentials)
-def play_async(db, config, video_index):
+def play(db, config, video_index):
     """
     play a given video by its index inside the playlist
     """
     video_index = int(video_index)
-    print("play_async", video_index)
+    print("play", video_index)
 
     if int(request.get_cookie("training")):
         playlist = "trainingsplaylist"
