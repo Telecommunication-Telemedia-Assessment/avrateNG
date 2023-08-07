@@ -14,21 +14,21 @@
     }
   }
 
-  function play(stimuli_idx) {
-    console.log("play: stimuli_idx:" + stimuli_idx);
-    get_request("/play/" + stimuli_idx);
+  function play(stimuli_idx, sub_index) {
+    console.log("play: stimuli_idx:" + stimuli_idx + " sub_index:" + sub_index );
+    get_request("/play/" + stimuli_idx + "/" + sub_index);
     setTimeout(
       ()=> {
         document.getElementById("rating_template").style.display = "block";
       },
-      1000  // 1 second delay to show the main rating form
+      2000  // 1 second delay to show the main rating form
     );
   }
 
-  play("{{stimuli_idx}}");
+  //play("{{stimuli_idx}}", "ref");
 </script>
 
-<div class="row" id="rating_template" style="padding-top: 1em; display:none">
+<div class="row" id="rating_template" style="padding-top: 1em;">
 % include('templates/' + rating_template, stimuli_idx=stimuli_idx, stimuli_file=stimuli_file, train=get("train", False), question=question)
 </div>
 

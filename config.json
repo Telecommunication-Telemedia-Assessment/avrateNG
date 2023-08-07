@@ -8,7 +8,7 @@
   "template_folder": "templates",
   "training": true,
   "trainingsplaylist": "training.list",
-  "rating_template": "rating/acr.tpl",
+  "rating_template": "rating/SAMVIQslider.tpl",
   "shuffle": true,
   "questionnaire": true,
   "gray_video": "videos/gray.mkv",

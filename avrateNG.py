@@ -59,14 +59,14 @@ def check_credentials(username, password):
     return password == validPassword and username == validName
 
 
-@route("/play/<stimuli_idx>")
+@route("/play/<stimuli_idx>/<sub_index>")
 @auth_basic(check_credentials)
-def play(db, config, stimuli_idx):
+def play(db, config, stimuli_idx, sub_index):
     """
     play a given media file by its index inside the playlist
     """
     stimuli_idx = int(stimuli_idx)
-    print("play", stimuli_idx)
+    print("play", stimuli_idx, sub_index)
 
     user_id, playlist_idx = get_user_id_playlist(db, config)
     if int(request.get_cookie("training")):
@@ -83,6 +83,9 @@ def play(db, config, stimuli_idx):
         prevends problems with spaces in media filenames"""
         return "\"" + x + "\""
     stimuli_file = " ".join(map(q, stimuli_file))
+    if sub_index != "ref":
+        stimuli_file, ext = os.path.splitext(stimuli_file)
+        stimuli_file = stimuli_file.rsplit("_ref", 1)[0] + "_" + sub_index + ext
 
     lInfo("play {}".format(stimuli_file))
     if "gray_video" in config:
