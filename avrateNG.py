@@ -225,7 +225,7 @@ def rate(db, config, stimuli_idx):
         title="AVRateNG",
         rating_template=config["rating_template"],
         stimuli_idx=stimuli_idx,
-        stimuli_file=config["playlist"][stimuli_idx],
+        stimuli_file=config[playlist][playlist_idx[stimuli_idx]],
         stimuli_done=stimuli_done,
         stimuli_count=len(config[playlist]),
         user_id=user_id,
