@@ -34,6 +34,8 @@ Just start `avrateNG.py` and open http://127.0.0.1:12347/ (preferred browser is 
 ./avrateNG.py
 ```
 
+**NOTE for Chrome: Disable the "*Calculate windows occlusion on windows*" option in chrome://flags**
+
 The default credentials are:
 
 - User: `max`
