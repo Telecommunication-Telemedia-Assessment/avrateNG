@@ -270,6 +270,19 @@ def questionnaire_save(db, config):
     redirect('/rate/0')
 
 
+@route('/take_break/<stimuli_idx>')
+@auth_basic(check_credentials)
+def take_break(config, stimuli_idx):
+    """
+    show a break screen after N stimuli
+    """
+    return template(
+        config["template_folder"] + "/break.tpl",
+        title="AVRateNG",
+        stimuli_idx=stimuli_idx
+    )
+
+
 @route('/finish')  # Finish screen
 @auth_basic(check_credentials)
 def finish(config):
@@ -313,6 +326,10 @@ def save_rating(db, config):
 
     if stimuli_done >= len(config["playlist"]):
         redirect('/finish')
+
+    break_after = config.get("break_after", 0)
+    if break_after > 0 and stimuli_done % break_after == 0:
+        redirect('/take_break/' + str(stimuli_done))
 
     redirect('/rate/' + str(stimuli_done))
 

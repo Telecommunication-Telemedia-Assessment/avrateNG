@@ -13,5 +13,6 @@
   "questionnaire": true,
   "gray_video": "videos/gray.mkv",
   "no_media_playback": false,
+  "break_after": 2,
   "question": "What is your opinion of the video quality?"
 }
