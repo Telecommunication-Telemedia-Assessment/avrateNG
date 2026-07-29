@@ -54,9 +54,20 @@
       document.getElementById("ratingselect").style.display = "none";
 
       if (radio_button_clicked == 0) {
-          document.getElementById("ratingselect").style.display="block";
-          event.preventDefault();
-          return
+        document.getElementById("ratingselect").style.display="block";
+        event.preventDefault();
+        return
       }
     }
+
+    document.addEventListener("keypress", function(event) {
+      // console.log(event)
+      if ("12345".includes(event.key)) { // rating
+        document.getElementById("radio_" + event.key).click();
+
+      }
+      if (event.keyCode == 13) {  // enter
+        document.getElementById("submitButton").click();
+      }
+    });
 </script>
