@@ -122,8 +122,8 @@ just remove `"gray_video": "..."` in your config file.
 Just run `avrateNG.py -h` and you will get the following screen:
 
 ```
-usage: avrateNG.py [-h] [-configfilename CONFIGFILENAME] [--standalone]
-                   [--development]
+usage: avrateNG.py [-h] [-configfilename CONFIGFILENAME] [--standalone] 
+                   [--development] [--user_id USER_ID]
 
 AVRateNG
 
@@ -133,9 +133,13 @@ options:
                         configuration file name (default: config.json)
   --standalone          run as standalone version (default: False)
   --development, -d     run in dev mode (default: False)
+  --user_id USER_ID     Manually set user ID for ratings (default: None)
 
 stg7 2023
 ```
+
+`user_id` can be set to continue a test run (eg. after accidentally closing the browser) and the test will continue from the last rated sequence.
+
 
 ### Templates
 
